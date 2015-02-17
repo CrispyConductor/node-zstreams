@@ -1,0 +1,14 @@
+{
+  "name": "zstreams",
+  "version": "1.0.0",
+  "description": "Yet another streams library for node",
+  "main": "./lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@git.zipscene.com:crispy1989/zstreams.git"
+  },
+  "dependencies": {
+    "extend": "^2.0.0",
+    "readable-stream": "^1.0.33"
+  }
+}
