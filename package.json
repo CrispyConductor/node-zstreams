@@ -7,8 +7,15 @@
     "type": "git",
     "url": "git@git.zipscene.com:crispy1989/zstreams.git"
   },
+  "scripts": {
+    "test": "node ./node_modules/mocha/bin/mocha ./test -R spec"
+  },
   "dependencies": {
     "extend": "^2.0.0",
     "readable-stream": "^1.0.33"
+  },
+  "devDependencies": {
+    "chai": "^2.0.0",
+    "mocha": "^2.1.0"
   }
 }
