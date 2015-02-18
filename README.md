@@ -23,6 +23,8 @@ parents, with
 ````javascript
 var fs = require('fs');
 var readStream = zstreams(fs.createReadStream('./file.txt'));
+// Also equivalent to:
+var readStream = zstreams.fromFile('./file.txt');
 ````
 
 Note that if you use `Readable.pipe()` on a zstream, it will automatically convert the destination to a zstream, so you
