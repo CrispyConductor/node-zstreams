@@ -8,7 +8,8 @@
     "url": "git@git.zipscene.com:crispy1989/zstreams.git"
   },
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha ./test -R spec"
+    "test": "node ./node_modules/mocha/bin/mocha ./test -R spec",
+    "watch": "node ./node_modules/mocha/bin/mocha --watch ./test -R spec"
   },
   "dependencies": {
     "extend": "^2.0.0",
