@@ -48,6 +48,7 @@ The `toArray()` method takes a callback that is called once, either on first err
 zstreams(fs.createReadStream('./test.txt')).throughSync(function(chunk) {
 	return chunk.toString('utf8').toUpperCase();
 }).pipe(fs.createWriteStream('./uppercase.txt'));
+// Instead of .pipe(...) you can also do .toFile('./uppercase.txt')
 ````
 
 A set of `through` methods are available on readables to easily transform data.  They create a Transform stream, use the supplied
