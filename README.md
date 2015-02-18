@@ -32,6 +32,7 @@ only need to explicitly convert the first stream in a chain.
 ````javascript
 var array = [1, 2, 3, 4, 5];
 new zstreams.ArrayReadableStream(array).pipe(new zstreams.ConsoleLogStream());
+zstreams.fromArray(array).pipe(new zstreams.ConsoleLogStream());
 new zstreams.ArrayReadableStream(array).pipe(something).pipe(somethingelse).toArray(function(error, resultArray) {
 
 });
