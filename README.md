@@ -23,6 +23,8 @@ parents, with
 ````javascript
 var fs = require('fs');
 var readStream = zstreams(fs.createReadStream('./file.txt'));
+// Also equivalent to:
+var readStream = zstreams.fromFile('./file.txt');
 ````
 
 Note that if you use `Readable.pipe()` on a zstream, it will automatically convert the destination to a zstream, so you
@@ -32,6 +34,7 @@ only need to explicitly convert the first stream in a chain.
 ````javascript
 var array = [1, 2, 3, 4, 5];
 new zstreams.ArrayReadableStream(array).pipe(new zstreams.ConsoleLogStream());
+zstreams.fromArray(array).pipe(new zstreams.ConsoleLogStream());
 new zstreams.ArrayReadableStream(array).pipe(something).pipe(somethingelse).toArray(function(error, resultArray) {
 
 });
@@ -45,6 +48,7 @@ The `toArray()` method takes a callback that is called once, either on first err
 zstreams(fs.createReadStream('./test.txt')).throughSync(function(chunk) {
 	return chunk.toString('utf8').toUpperCase();
 }).pipe(fs.createWriteStream('./uppercase.txt'));
+// Instead of .pipe(...) you can also do .toFile('./uppercase.txt')
 ````
 
 A set of `through` methods are available on readables to easily transform data.  They create a Transform stream, use the supplied
