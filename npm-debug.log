@@ -1,0 +1,23 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/andrew/.nvm/v0.10.36/bin/node',
+1 verbose cli   '/home/andrew/.nvm/v0.10.36/bin/npm',
+1 verbose cli   'run-script',
+1 verbose cli   'watch' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.36
+4 error Failed to parse json
+4 error Unexpected string
+5 error File: /home/andrew/Repos/node-zstreams/package.json
+6 error Failed to parse package.json data.
+6 error package.json must be actual JSON, not just JavaScript.
+6 error
+6 error This is not a bug in npm.
+6 error Tell the package author to fix their package.json file. JSON.parse
+7 error System Linux 3.18.6-1-ARCH
+8 error command "/home/andrew/.nvm/v0.10.36/bin/node" "/home/andrew/.nvm/v0.10.36/bin/npm" "run-script" "watch"
+9 error cwd /home/andrew/Repos/node-zstreams
+10 error node -v v0.10.36
+11 error npm -v 1.4.28
+12 error file /home/andrew/Repos/node-zstreams/package.json
+13 error code EJSONPARSE
+14 verbose exit [ 1, true ]
