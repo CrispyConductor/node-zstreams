@@ -9,10 +9,12 @@
   },
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha ./test -R spec",
+    "lint": "node ./node_modules/jshint/bin/jshint --reporter unix --exclude ./node_modules . || exit 0",
     "watch": "node ./node_modules/mocha/bin/mocha --watch ./test -R spec"
   },
   "dependencies": {
     "extend": "^2.0.0",
+    "jshint": "^2.6.0",
     "readable-stream": "^1.0.33"
   },
   "devDependencies": {
