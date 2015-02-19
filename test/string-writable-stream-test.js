@@ -15,7 +15,7 @@ describe('StringWritableStream', function() {
 			this.push(null);
 		};
 		var sws = new StringWritableStream({ objectMode: false });
-		readStream.pipe(sws).toCallback(function(error) {
+		readStream.pipe(sws).intoCallback(function(error) {
 			expect(error).to.not.exist;
 
 			var str = sws.getString();
@@ -35,7 +35,7 @@ describe('StringWritableStream', function() {
 			this.push(null);
 		};
 		var sws = new StringWritableStream({ objectMode: true });
-		readStream.pipe(sws).toCallback(function(error) {
+		readStream.pipe(sws).intoCallback(function(error) {
 			expect(error).to.not.exist;
 
 			var str = sws.getString();

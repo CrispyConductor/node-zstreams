@@ -13,7 +13,7 @@ describe('SplitStream', function() {
 			this.push(null);
 		};
 		var ss = new SplitStream(' ');
-		readStream.pipe(ss).toArray(function(error, array) {
+		readStream.pipe(ss).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(8);
@@ -34,7 +34,7 @@ describe('SplitStream', function() {
 			this.push(null);
 		};
 		var ss = new SplitStream();
-		readStream.pipe(ss).toArray(function(error, array) {
+		readStream.pipe(ss).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(4);
@@ -55,7 +55,7 @@ describe('SplitStream', function() {
 			this.push(' Test');
 			this.push(null);
 		};
-		readStream.pipe(new SplitStream(/ +/)).toArray(function(error, array) {
+		readStream.pipe(new SplitStream(/ +/)).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array).to.have.length(2);

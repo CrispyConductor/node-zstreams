@@ -5,8 +5,8 @@ var zstreams = require('../lib');
 describe('zstreams.fromArray', function() {
 	it('should create an object stream from an array', function(done) {
 		var input = ['a', 'b', 'c', 'd'];
-		var arrayStream = zstreams.fromArray(input)
-		arrayStream.toArray(function(error, array) {
+		var arrayStream = zstreams.fromArray(input);
+		arrayStream.intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(arrayStream.isReadableObjectMode()).to.equal(true);
 			expect(array).to.be.instanceof(Array);
@@ -42,7 +42,7 @@ describe('zstreams.fromFunction', function() {
 				ret = 'a';
 			}
 			cb(null, ret);
-		}).toArray(function(error, array) {
+		}).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array).to.have.length(4);
@@ -54,7 +54,7 @@ describe('zstreams.fromFunction', function() {
 	it('should handle errors', function(done) {
 		zstreams.fromFunction(function(cb) {
 			cb(new Error('Erroring out'));
-		}).toArray(function(error) {
+		}).intoArray(function(error) {
 			expect(error).to.exist;
 			done();
 		});
@@ -70,7 +70,7 @@ describe('zstreams.fromFunctionSync', function() {
 				ret = 'a';
 			}
 			return ret;
-		}).toArray(function(error, array) {
+		}).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array).to.have.length(4);
@@ -80,9 +80,9 @@ describe('zstreams.fromFunctionSync', function() {
 	});
 
 	it('should handle errors', function(done) {
-		zstreams.fromFunctionSync(function(cb) {
+		zstreams.fromFunctionSync(function() {
 			throw new Error('Erroring out');
-		}).toArray(function(error) {
+		}).intoArray(function(error) {
 			expect(error).to.exist;
 			done();
 		});

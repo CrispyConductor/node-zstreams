@@ -11,7 +11,7 @@ describe('FilterStream', function() {
 			cb(null, (entry % 2 === 0));
 		});
 
-		arrStream.pipe(fs).toArray(function(error, array) {
+		arrStream.pipe(fs).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(4);

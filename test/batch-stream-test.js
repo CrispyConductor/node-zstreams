@@ -9,7 +9,7 @@ describe('BatchStream', function() {
 		var arrStream = new ArrayReadableStream([0, 1, 2, 3, 4, 5, 6, 7]);
 		var bs = new BatchStream(3, {});
 
-		arrStream.pipe(bs).toArray(function(error, arrays) {
+		arrStream.pipe(bs).intoArray(function(error, arrays) {
 			expect(error).to.not.exist;
 			expect(arrays).to.be.instanceof(Array);
 			expect(arrays).to.have.length(3);
@@ -40,7 +40,7 @@ describe('BatchStream', function() {
 		var arrStream = new ArrayReadableStream(arr);
 		var bs = new BatchStream();
 
-		arrStream.pipe(bs).toArray(function(error, arrays) {
+		arrStream.pipe(bs).intoArray(function(error, arrays) {
 			expect(error).to.not.exist;
 			expect(arrays).to.be.instanceof(Array);
 			expect(arrays).to.have.length(4);
@@ -50,7 +50,7 @@ describe('BatchStream', function() {
 	});
 
 	it('should not push empty batches', function(done) {
-		zstreams.fromArray(['a', 'b', 'c', 'd']).pipe(new BatchStream(1)).toArray(function(error, arrays) {
+		zstreams.fromArray(['a', 'b', 'c', 'd']).pipe(new BatchStream(1)).intoArray(function(error, arrays) {
 			expect(error).to.not.exist;
 			expect(arrays).to.be.instanceof(Array);
 			expect(arrays).to.have.length(4);

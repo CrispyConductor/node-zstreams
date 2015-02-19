@@ -48,7 +48,7 @@ The `toArray()` method takes a callback that is called once, either on first err
 zstreams(fs.createReadStream('./test.txt')).throughSync(function(chunk) {
 	return chunk.toString('utf8').toUpperCase();
 }).pipe(fs.createWriteStream('./uppercase.txt'));
-// Instead of .pipe(...) you can also do .toFile('./uppercase.txt')
+// Instead of .pipe(...) you can also do .intoFile('./uppercase.txt')
 ````
 
 A set of `through` methods are available on readables to easily transform data.  They create a Transform stream, use the supplied
@@ -147,7 +147,7 @@ stream.firstError(function(error) {
 
 // This similar function is only available on Writable streams.  The given callback is called either on error or when the
 // Writable emits `finish`.  In either case, it is guaranteed to be only called once.
-writable.toCallback(function(error) {
+writable.intoCallback(function(error) {
 
 });
 ````
