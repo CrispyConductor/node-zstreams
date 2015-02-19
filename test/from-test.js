@@ -24,10 +24,10 @@ describe('zstreams.fromArray', function() {
 describe('zstreams.fromFile', function() {
 	it('should create a data stream from a file', function(done) {
 		var fileStream = zstreams.fromFile(__dirname + '/resources/abcd.json');
-		fileStream.toArray(function(error, array) {
+		fileStream.intoString(function(error, string) {
 			expect(error).to.not.exist;
-			expect(array).to.be.instanceof(Array);
 			expect(fileStream.isReadableObjectMode()).to.equal(false);
+			expect(string).to.equal('"a"\n"b"\n"c"\n"d"\n');
 			done();
 		});
 	});
