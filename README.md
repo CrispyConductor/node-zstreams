@@ -1,5 +1,7 @@
 # zstreams
 
+![Travis CI Status](https://travis-ci.org/crispy1989/node-zstreams.svg?branch=master)
+
 A utility library to make node streams easier to work with, also including some utility streams.
 
 ## Basic Usage
