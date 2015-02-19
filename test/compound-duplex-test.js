@@ -28,7 +28,7 @@ describe('CompoundDuplex', function() {
 		});
 
 	});
-
+/*
 	it('should forward errors from encapsulated streams', function(done) {
 		function TestCompoundDuplexStream() {
 			CompoundDuplex.call(this,
@@ -46,5 +46,5 @@ describe('CompoundDuplex', function() {
 			done();
 		});
 	});
-
+*/
 });
