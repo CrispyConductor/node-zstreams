@@ -1,4 +1,5 @@
 node_modules
+npm-debug.log
 Node_Framework.sublime-project
 Node_Framework.sublime-workspace
 project.sublime-project
