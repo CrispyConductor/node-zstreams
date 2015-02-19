@@ -7,18 +7,12 @@ var IntersperseStream = zstreams.IntersperseStream;
 describe('IntersperseStream', function() {
 	it('should intersperse a seperator into a data stream', function(done) {
 		var readStream = new Readable({ objectMode: false });
-		readStream._first = true;
-		readStream._read = function(size) {
-			if(this._first) {
-				this._first = false;
-			} else {
-				this.push(null);
-				return;
-			}
+		readStream._read = function() {
 			this.push('a');
 			this.push('b');
 			this.push('c');
 			this.push('d');
+			this.push(null);
 		};
 		var is = new IntersperseStream(' ');
 		readStream.pipe(is).intoString(function(error, string) {
@@ -31,18 +25,12 @@ describe('IntersperseStream', function() {
 
 	it('should intersperse a seperator into an object stream', function(done) {
 		var readStream = new Readable({ objectMode: true });
-		readStream._first = true;
-		readStream._read = function(size) {
-			if(this._first) {
-				this._first = false;
-			} else {
-				this.push(null);
-				return;
-			}
+		readStream._read = function() {
 			this.push({ a: 'a' });
 			this.push({ b: 'b' });
 			this.push({ c: 'c' });
 			this.push({ d: 'd' });
+			this.push(null);
 		};
 		var is = new IntersperseStream(' ', { objectMode: true });
 		readStream.pipe(is).toArray(function(error, array) {
@@ -62,18 +50,12 @@ describe('IntersperseStream', function() {
 
 	it('should intersperse "\n" by default', function(done) {
 		var readStream = new Readable({ objectMode: true });
-		readStream._first = true;
-		readStream._read = function(size) {
-			if(this._first) {
-				this._first = false;
-			} else {
-				this.push(null);
-				return;
-			}
+		readStream._read = function() {
 			this.push('a');
 			this.push('b');
 			this.push('c');
 			this.push('d');
+			this.push(null);
 		};
 		var is = new IntersperseStream({ objectMode: true });
 		readStream.pipe(is).toArray(function(error, array) {
@@ -93,15 +75,9 @@ describe('IntersperseStream', function() {
 
 	it('should not put seperators before or after the start/end of the stream', function(done) {
 		var readStream = new Readable({ objectMode: true });
-		readStream._first = true;
-		readStream._read = function(size) {
-			if(this._first) {
-				this._first = false;
-			} else {
-				this.push(null);
-				return;
-			}
+		readStream._read = function() {
 			this.push({ a: 'a' });
+			this.push(null);
 		};
 		var is = new IntersperseStream({ objectMode: true });
 		readStream.pipe(is).toArray(function(error, array) {

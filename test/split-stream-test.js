@@ -7,16 +7,10 @@ var SplitStream = zstreams.SplitStream;
 describe('SplitStream', function() {
 	it('should split a data stream', function(done) {
 		var readStream = new Readable({ objectMode: false });
-		readStream._first = true;
-		readStream._read = function(size) {
-			if(this._first) {
-				this._first = false;
-			} else {
-				this.push(null);
-				return;
-			}
+		readStream._read = function() {
 			this.push('qqqqqq qqqqqq qqqqqq qqqqqq qqqq');
 			this.push('qq qqqqqq qqqqqq qqqqqq');
+			this.push(null);
 		};
 		var ss = new SplitStream(' ');
 		readStream.pipe(ss).toArray(function(error, array) {
@@ -35,15 +29,9 @@ describe('SplitStream', function() {
 
 	it('should split by /\\r?\\n/ by default', function(done) {
 		var readStream = new Readable({ objectMode: false });
-		readStream._first = true;
-		readStream._read = function(size) {
-			if(this._first) {
-				this._first = false;
-			} else {
-				this.push(null);
-				return;
-			}
+		readStream._read = function() {
 			this.push('qqqqqq\nqqqqqq\r\nqqqqqq\nqqqqqq');
+			this.push(null);
 		};
 		var ss = new SplitStream();
 		readStream.pipe(ss).toArray(function(error, array) {
