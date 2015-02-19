@@ -21,16 +21,9 @@ describe('IntersperseStream', function() {
 			this.push('d');
 		};
 		var is = new IntersperseStream(' ');
-		readStream.pipe(is).toArray(function(error, array) {
+		readStream.pipe(is).intoString(function(error, string) {
 			expect(error).to.not.exist;
-			expect(array).to.be.instanceof(Array);
-			expect(array.length).to.equal(7);
-
-			expect(array).to.contain(new Buffer('a'));
-			expect(array).to.contain(new Buffer('b'));
-			expect(array).to.contain(new Buffer('c'));
-			expect(array).to.contain(new Buffer('d'));
-			expect(array).to.contain(new Buffer(' '));
+			expect(string).to.equal('a b c d');
 
 			done();
 		});
