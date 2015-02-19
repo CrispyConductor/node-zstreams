@@ -12,7 +12,7 @@ describe('BatchStream', function() {
 		arrStream.pipe(bs).toArray(function(error, arrays) {
 			expect(error).to.not.exist;
 			expect(arrays).to.be.instanceof(Array);
-			expect(arrays.length).to.equal(3);
+			expect(arrays).to.have.length(3);
 
 			var maxLen = 0;
 			var minLen = Number.MAX_VALUE;
@@ -42,8 +42,24 @@ describe('BatchStream', function() {
 
 		arrStream.pipe(bs).toArray(function(error, arrays) {
 			expect(error).to.not.exist;
-			expect(arrays.length).to.equal(4);
+			expect(arrays).to.be.instanceof(Array);
+			expect(arrays).to.have.length(4);
 			
+			done();
+		});
+	});
+
+	it('should not push empty batches', function(done) {
+		zstreams.fromArray(['a', 'b', 'c', 'd']).pipe(new BatchStream(1)).toArray(function(error, arrays) {
+			expect(error).to.not.exist;
+			expect(arrays).to.be.instanceof(Array);
+			expect(arrays).to.have.length(4);
+
+			arrays.forEach(function(array) {
+				expect(array).to.be.instanceof(Array);
+				expect(array).to.have.length(1);
+			});
+
 			done();
 		});
 	});

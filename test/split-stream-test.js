@@ -59,4 +59,20 @@ describe('SplitStream', function() {
 			done();
 		});
 	});
+
+	it('should split / +/ correctly', function(done) {
+		var readStream = new Readable({ objectMode: true });
+		readStream._read = function() {
+			this.push('Test ');
+			this.push(' Test');
+			this.push(null);
+		};
+		readStream.pipe(new SplitStream(/ +/)).toArray(function(error, array) {
+			expect(error).to.not.exist;
+			expect(array).to.be.instanceof(Array);
+			expect(array).to.have.length(2);
+
+			done();
+		});
+	});
 });
