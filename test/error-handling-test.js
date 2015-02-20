@@ -44,8 +44,45 @@ describe('Error Handling', function() {
 
 		function verifyErrors() {
 			expect(errorStreams.length).to.equal(7);
+			expect(errorStreams).to.deep.equal([
+				stringReadableStream,
+				passThrough1,
+				passThrough2,
+				errorEmittingStream,
+				passThrough3,
+				passThrough4,
+				stringWritableStream
+			]);
 			done();
 		}
+
+	});
+
+	it('should destruct a pipeline on unignored errors', function(done) {
+
+		var errorThrown = false;
+		var unpipeCount = 0;
+
+		var stringReadableStream = new StringReadableStream('Hello World', { chunkSize: 3 });
+		var errorEmittingStream = new ThroughStream(function(chunk, encoding, callback) {
+			var error = new Error('Test Error');
+			callback(error);
+		}).on('unpipe', function() {
+			unpipeCount++;
+		});
+		var stringWritableStream = new StringWritableStream().on('unpipe', function() {
+			unpipeCount++;
+		});
+
+		stringReadableStream.pipe(errorEmittingStream).pipe(stringWritableStream).intoCallback(function(error) {
+
+			setImmediate(function() {
+				expect(error).to.exist;
+				expect(error.message).to.equal('Test Error');
+				expect(unpipeCount).to.equal(2);
+				done();
+			});
+		});
 
 	});
 
