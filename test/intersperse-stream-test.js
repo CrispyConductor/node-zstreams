@@ -33,7 +33,7 @@ describe('IntersperseStream', function() {
 			this.push(null);
 		};
 		var is = new IntersperseStream(' ', { objectMode: true });
-		readStream.pipe(is).toArray(function(error, array) {
+		readStream.pipe(is).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(7);
@@ -58,7 +58,7 @@ describe('IntersperseStream', function() {
 			this.push(null);
 		};
 		var is = new IntersperseStream({ objectMode: true });
-		readStream.pipe(is).toArray(function(error, array) {
+		readStream.pipe(is).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(7);
@@ -80,7 +80,7 @@ describe('IntersperseStream', function() {
 			this.push(null);
 		};
 		var is = new IntersperseStream({ objectMode: true });
-		readStream.pipe(is).toArray(function(error, array) {
+		readStream.pipe(is).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(1);

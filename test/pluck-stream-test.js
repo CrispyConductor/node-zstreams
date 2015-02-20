@@ -17,7 +17,7 @@ describe('PluckStream', function() {
 			this.push(null);
 		};
 		var ps = new PluckStream('a');
-		readStream.pipe(ps).toArray(function(error, array) {
+		readStream.pipe(ps).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(4);
@@ -42,7 +42,7 @@ describe('PluckStream', function() {
 			this.push(null);
 		};
 		var ps = new PluckStream();
-		readStream.pipe(ps).toArray(function(error, array) {
+		readStream.pipe(ps).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(2);

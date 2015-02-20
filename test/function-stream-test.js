@@ -12,7 +12,7 @@ describe('FunctionStream', function() {
 				ret = 'a';
 			}
 			cb(null, ret);
-		}).toArray(function(error, array) {
+		}).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array).to.have.length(4);
@@ -24,7 +24,7 @@ describe('FunctionStream', function() {
 	it('should handle errors', function(done) {
 		new FunctionStream(function(cb) {
 			cb(new Error('Erroring out'));
-		}).toArray(function(error) {
+		}).intoArray(function(error) {
 			expect(error).to.exist;
 			done();
 		});
