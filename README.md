@@ -194,6 +194,45 @@ stream.isWritable();
 
 zstreams also provides several utility streams on the zstreams object which may come in handy.
 
+#### ArrayReadableStream
+
+This is a readable object stream which will stream the object in an array.  It is the stream used by `zstreams.fromArray()`.
+
+````javascript
+var arrayReadableStream = new zstreams.ArrayReadableStream([1, 2, 3, 4]);
+arrayReadableStream.pipe(...);
+````
+
+#### ArrayWritableStream
+
+This is a writable object stream which will store all objects it receives into an array.
+
+````javascript
+var arrayReadableStream = new zstreams.ArrayReadableStream([1, 2, 3, 4]);
+var arrayWritableStream = new zstreams.ArrayWritableStream();
+arrayReadableStream.pipe(arrayWritableStream).intoCallback(function() {
+	var array = arrayWritableStream.getArray();
+});
+````
+
+#### BatchStream
+
+This stream receives a stream of objects and generates a stream of arrays of batches of these objects.  Its
+constructor takes a parameter of the size of each batch.
+
+````javascript
+zstreams
+	.fromArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+	.pipe(new zstreams.BatchStream(3))
+	.intoArray(function(error, array) {
+		// array is: [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]
+	});
+````
+
+#### BlackholeStream
+
+Anything piped into this stream is discarded.
+
 #### ConsoleLogStream
 
 Anything piped to this Writable will be logged out using console.log().  Takes the same parameters as Writable,
@@ -203,6 +242,5 @@ notably the `objectMode` option should be set if it's logging objects.
 zstreams(fs.createReadStream('in.txt')).tee(new zstreams.ConsoleLogStream()).pipe(fs.createWriteStream('out.txt'));
 ````
 
-#### BlackholeStream
 
-Anything piped into this stream is discarded.
+
