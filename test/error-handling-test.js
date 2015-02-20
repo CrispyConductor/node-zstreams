@@ -86,4 +86,35 @@ describe('Error Handling', function() {
 
 	});
 
+	it('should resume a stream if an error is ignored', function(done) {
+
+		var errorEmitted = false;
+
+		var stringReadableStream = new StringReadableStream('Hello World', { chunkSize: 3 });
+		var errorEmittingStream = new ThroughStream(function(chunk, encoding, callback) {
+			if(errorEmitted) {
+				callback(null, chunk);
+			} else {
+				this.push(chunk);
+				var error = new Error('Test Error');
+				errorEmitted = true;
+				callback(error);
+			}
+		});
+		var passThrough = new PassThrough();
+		var stringWritableStream = new StringWritableStream();
+
+		stringWritableStream.on('chainerror', function(error) {
+			expect(error.message).to.equal('Test Error');
+			this.ignoreError();
+		});
+
+		stringReadableStream.pipe(errorEmittingStream).pipe(passThrough).pipe(stringWritableStream).firstFinish(function() {
+			var result = stringWritableStream.getString();
+			expect(result).to.equal('Hello World');
+			done();
+		});
+
+	});
+
 });
