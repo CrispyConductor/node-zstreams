@@ -157,7 +157,55 @@ writable.intoCallback(function(error) {
 });
 ````
 
-### Other Useful Functions
+## Event Streams
+
+zstreams contains a few streams that operate on events pass through the stream.  Internally, events are just converted into
+objects and passed through an object stream.  These event streams are useful because they present an EventEmitter and crisphooks
+interface.
+
+If you need to access the stream as a plain object stream, you can use the event objects passed along.  They follow this format:
+````javascript
+{
+	"type": "Event Type",
+	"args": ["Argument 1", "Argument 2"]
+}
+````
+
+Here's a basic example:
+````javascript
+var emitter = new EventEmitter();
+
+// Construct an EventReadable stream that listens for events testEvent1 and testEvent2 on emitter
+// and translates them into stream objects
+new EventReadable(emitter, [ 'testEvent1', 'testEvent2' ])
+	// Pipe that through an event transform that emits some other events in response to the first events
+	.pipe(new EventTransform()
+		.on('testEvent1', function(val) {
+			this.pushEvent('testEvent3', val + 1);
+		})
+		.on('testEvent2', function(val) {
+			this.pushEvent('testEvent4', val + 1);
+		})
+	// Pipe that into an event writable to do something with the events
+	).pipe(new EventWritable()
+		.on('testEvent3', function(val) {
+			// Do something with testEvent3
+		})
+		.on('testEvent4', function(val) {
+			// Do something with testEvent4
+		})
+	).intoCallback(function(error) {
+		// Stream finished
+	});
+
+	emitter.emit('testEvent1', 1);
+	emitter.emit('testEvent2', 2);
+	emitter.emit('end');
+
+});
+````
+
+## Other Useful Functions
 
 ````javascript
 // List streams piping to this stream
@@ -193,11 +241,11 @@ stream.isReadable();
 stream.isWritable();
 ````
 
-### Utility Streams
+## Utility Streams
 
 zstreams also provides several utility streams on the zstreams object which may come in handy.
 
-#### ArrayReadableStream
+### ArrayReadableStream
 
 This is a readable object stream which will stream the object in an array.  It is the stream used by `zstreams.fromArray()`.
 
@@ -206,7 +254,7 @@ var arrayReadableStream = new zstreams.ArrayReadableStream([1, 2, 3, 4]);
 arrayReadableStream.pipe(...);
 ````
 
-#### ArrayWritableStream
+### ArrayWritableStream
 
 This is a writable object stream which will store all objects it receives into an array.
 
@@ -218,7 +266,7 @@ arrayReadableStream.pipe(arrayWritableStream).intoCallback(function() {
 });
 ````
 
-#### BatchStream
+### BatchStream
 
 This stream receives a stream of objects and generates a stream of arrays of batches of these objects.  Its
 constructor takes a parameter of the size of each batch.
@@ -232,11 +280,11 @@ zstreams
 	});
 ````
 
-#### BlackholeStream
+### BlackholeStream
 
 Anything piped into this stream is discarded.
 
-#### CompoundDuplex
+### CompoundDuplex
 
 This stream allows you to construct a stream from a set of component streams piped together, acting as a single stream.
 The readableObjectMode and writableObjectMode of the CompoundDuplex stream are automatically determined.
@@ -260,7 +308,7 @@ zstream.fromFile('newlineJsonStream.txt').pipe(new NewlineSeparatedJSONParser())
 });
 ````
 
-#### ConsoleLogStream
+### ConsoleLogStream
 
 Anything piped to this Writable will be logged out using console.log().  Takes the same parameters as Writable,
 notably the `objectMode` option should be set if it's logging objects.
@@ -269,7 +317,7 @@ notably the `objectMode` option should be set if it's logging objects.
 zstreams(fs.createReadStream('in.txt')).tee(new zstreams.ConsoleLogStream()).pipe(fs.createWriteStream('out.txt'));
 ````
 
-#### FilterStream
+### FilterStream
 
 The asynchronous streaming equivalent of `Array.prototype.filter()`.
 

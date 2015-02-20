@@ -13,6 +13,7 @@
     "watch": "node ./node_modules/mocha/bin/mocha --watch ./test -R spec"
   },
   "dependencies": {
+    "crisphooks": "0.0.1",
     "extend": "^2.0.0",
     "jshint": "^2.6.0",
     "readable-stream": "^1.0.33"
