@@ -21,7 +21,7 @@ describe('CompoundDuplex', function() {
 		}
 		inherits(TestCompoundDuplexStream, CompoundDuplex);
 
-		zstreams.fromString('Hello World').pipe(new TestCompoundDuplexStream()).toArray(function(error, array) {
+		zstreams.fromString('Hello World').pipe(new TestCompoundDuplexStream()).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.deep.equal(['HELLO', 'WORLD']);
 			done();
@@ -41,7 +41,7 @@ describe('CompoundDuplex', function() {
 		}
 		inherits(TestCompoundDuplexStream, CompoundDuplex);
 
-		zstreams.fromString('Hello World').pipe(new TestCompoundDuplexStream()).toArray(function(error, array) {
+		zstreams.fromString('Hello World').pipe(new TestCompoundDuplexStream()).intoArray(function(error, array) {
 			expect(error).to.exist;
 			done();
 		});
