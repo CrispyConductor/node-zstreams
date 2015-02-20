@@ -137,6 +137,9 @@ By default, after the `chainerror` event is fired, the `abortChain()` method is 
 repipes all Readables to blackhole streams, and calls `_abortStream()` on each stream.  If you want to recover from an error, you
 must call `this.ignoreError()` inside of the `chainerror` handler.  This will suppress that error behavior.
 
+If you are making use of conditionally ignored errors, you may also want to make use of the 'unignorederror' event.  This event
+is emitted on every stream in a chain immediately before the chain is destructed on unignored error.
+
 The following options are also available for error handling:
 
 ````javascript

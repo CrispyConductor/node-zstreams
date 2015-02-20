@@ -109,7 +109,8 @@ describe('Error Handling', function() {
 			this.ignoreError();
 		});
 
-		stringReadableStream.pipe(errorEmittingStream).pipe(passThrough).pipe(stringWritableStream).firstFinish(function() {
+		stringReadableStream.pipe(errorEmittingStream).pipe(passThrough).pipe(stringWritableStream).intoCallback(function(error) {
+			expect(error).to.not.exist;
 			var result = stringWritableStream.getString();
 			expect(result).to.equal('Hello World');
 			done();
