@@ -236,6 +236,30 @@ zstreams
 
 Anything piped into this stream is discarded.
 
+#### CompoundDuplex
+
+This stream allows you to construct a stream from a set of component streams piped together, acting as a single stream.
+The readableObjectMode and writableObjectMode of the CompoundDuplex stream are automatically determined.
+
+````javascript
+function NewlineSeparatedJSONParser() {
+	zstreams.CompoundDuplex.call(this,
+		new SplitStream(/\r?\n/)
+		.throughSync(function(chunk) {
+			return JSON.parse(chunk);
+		})
+		.filterSync(function(obj) {
+			return obj !== null;
+		})
+	);
+}
+util.inherits(NewlineSeparatedJSONParser, zstreams.CompoundDuplex);
+
+zstream.fromFile('newlineJsonStream.txt').pipe(new NewlineSeparatedJSONParser()).intoArray(function(error, array) {
+	// ...
+});
+````
+
 #### ConsoleLogStream
 
 Anything piped to this Writable will be logged out using console.log().  Takes the same parameters as Writable,
@@ -245,5 +269,16 @@ notably the `objectMode` option should be set if it's logging objects.
 zstreams(fs.createReadStream('in.txt')).tee(new zstreams.ConsoleLogStream()).pipe(fs.createWriteStream('out.txt'));
 ````
 
+#### FilterStream
+
+The asynchronous streaming equivalent of `Array.prototype.filter()`.
+
+````javascript
+zstreams.fromArray([1, 2, 3]).pipe(new zstreams.FilterStream(function(obj, cb) {
+	return obj >= 2;
+})).intoArray(function(error, array) {
+	// array is [2, 3]
+});
+````
 
 
