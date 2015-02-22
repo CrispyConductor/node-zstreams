@@ -8,14 +8,14 @@ describe('FunctionStream', function() {
 		var times = 0;
 		new FunctionStream(function(cb) {
 			var ret = null;
-			if(times++ < 4) {
+			if(times++ < 400) {
 				ret = 'a';
 			}
 			cb(null, ret);
 		}).intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
-			expect(array).to.have.length(4);
+			expect(array).to.have.length(400);
 
 			done();
 		});
