@@ -22,9 +22,11 @@ function TestServer() {
 		} else if(request.method === 'POST' && request.url === '/echo') {
 			response.writeHead(200);
 			zstreams(request).pipe(response);
-		} else if(request.method === 'GET' && request.url === 'error') {
+		} else if(request.url === 'error') {
 			response.writeHead(500);
 			zstreams.fromString('test error').pipe(response);
+		} else if(request.url === '/reset') {
+			request.connection.destroy();
 		} else {
 			response.writeHead(404);
 			zstreams.fromString('not found').pipe(response);
@@ -66,6 +68,62 @@ describe('Request Streams', function() {
 			}).intoCallback(function(error) {
 				expect(error).to.not.exist;
 				expect(nextExpected).to.equal(300);
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
+
+	});
+
+	it('should allow streaming data to a post request', function(done) {
+		var server = new TestServer();
+		server.start(function(error) {
+			expect(error).to.not.exist;
+
+			zstreams.fromString('hello world').pipe(request({
+				url: server.getURLBase() + '/echo',
+				method: 'POST'
+			})).intoString(function(error, str) {
+				expect(error).to.not.exist;
+				expect(str).to.equal('hello world');
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
+	});
+
+	it('should handle connection errors', function(done) {
+		var server = new TestServer();
+		server.start(function(error) {
+			expect(error).to.not.exist;
+			zstreams(request({
+				url: server.getURLBase() + '/reset',
+				method: 'GET'
+			})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
+				expect(error).to.exist;
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
+	});
+
+	it('should handle error status codes', function(done) {
+
+		var server = new TestServer();
+		server.start(function(error) {
+			expect(error).to.not.exist;
+
+			zstreams(request({
+				url: server.getURLBase() + '/error',
+				method: 'GET'
+			})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
+				expect(error).to.exist;
 				server.destroy(function(error) {
 					expect(error).to.not.exist;
 					done();
