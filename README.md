@@ -368,3 +368,26 @@ zstreams.fromArray([1, 2, 3]).pipe(new zstreams.FilterStream(function(obj, cb) {
 });
 ````
 
+### SkipStream
+
+Skip over objects/bytes from a Readable stream
+
+```javascript
+zstreams.fromArray([1, 2, 3, 4])
+	.pipe(new zstreams.SkipStream(2, { objectMode: true })
+	.intoArray(function(error, array) {
+		// array is [3, 4]
+	});
+```
+
+### LimitStream
+
+Limit objects/bytes from a Readable stream
+
+```javascript
+zstreams.fromArray([1, 2, 3, 4])
+	.pipe(new zstreams.LimitStream(2, { objectMode: true })
+	.intoArray(function(error, array) {
+		// array is [1, 2]
+	});
+```
