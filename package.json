@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "crisphooks": "0.0.1",
+    "es6-promise": "^2.0.1",
     "extend": "^2.0.0",
     "jshint": "^2.6.0",
     "readable-stream": "^1.0.33"
