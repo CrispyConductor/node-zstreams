@@ -1,11 +1,11 @@
 {
   "name": "zstreams",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Yet another streams library for node",
   "main": "./lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git@git.zipscene.com:crispy1989/zstreams.git"
+    "url": "git@github.com:crispy1989/zstreams.git"
   },
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha ./test -R spec",
