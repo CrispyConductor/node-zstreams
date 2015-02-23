@@ -22,7 +22,7 @@ function TestServer() {
 		} else if(request.method === 'POST' && request.url === '/echo') {
 			response.writeHead(200);
 			zstreams(request).pipe(response);
-		} else if(request.url === 'error') {
+		} else if(request.url === '/error') {
 			response.writeHead(500);
 			zstreams.fromString('test error').pipe(response);
 		} else if(request.url === '/reset') {
@@ -124,6 +124,52 @@ describe('Request Streams', function() {
 				method: 'GET'
 			})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
 				expect(error).to.exist;
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
+
+	});
+
+	it('should read in the body for error response codes', function(done) {
+		var server = new TestServer();
+		server.start(function(error) {
+			expect(error).to.not.exist;
+
+			zstreams(request({
+				url: server.getURLBase() + '/error',
+				method: 'GET'
+			})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
+				expect(error).to.exist;
+				expect(error.responseBody).to.equal('test error');
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
+	});
+
+	it('should work when called via the convenience function', function(done) {
+
+		var server = new TestServer();
+		server.start(function(error) {
+			expect(error).to.not.exist;
+			var nextExpected = 0;
+
+			zstreams.request({
+				url: server.getURLBase() + '/testdata',
+				method: 'GET'
+			}).split(',').each(function(obj, cb) {
+				var num = parseInt(obj, 10);
+				expect(num).to.equal(nextExpected);
+				nextExpected++;
+				cb();
+			}).intoCallback(function(error) {
+				expect(error).to.not.exist;
+				expect(nextExpected).to.equal(300);
 				server.destroy(function(error) {
 					expect(error).to.not.exist;
 					done();

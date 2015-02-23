@@ -110,6 +110,33 @@ readable.throughDataSync(function(object, cb) {
 
 The synchronous variants can also throw exceptions, which are converted to stream errors.
 
+### HTTP Requests
+
+If you install the optional dependency `request` via `npm install request`, you can use the zstreams request extensions.  These
+extensions provide the following benefits:
+* An actual streams2 interface
+* Treating certain HTTP codes as errors
+* Automatically reading in the response body on error instead of streaming it as if it were a legitimate response
+* All the other benefits of a zstreams stream
+
+A zstreams `RequestStream` is a Duplex stream and can be piped from or to (in the case of sending a body to the server).
+
+````javascript
+zstreams.request('http://www.google.com').intoFile('/tmp/output.html', function(error) {
+	// If any status code other than 200 was returned, the error will be thrown.  Additionally, the
+	// entire response body for the error response will be available as error.responseBody .
+});
+
+// You can also override the default options
+zstreams.request({
+	url: 'http://www.google.com',
+	allowedStatusCodes: [200],	// treat 200 as the only valid response code
+	readErrorResponse: false	// disable reading the whole response body on error
+}).intoFile('/tmp/output.html', function(error) {
+	// ...
+});
+````
+
 ### Stream Destruction and Cleanup
 
 When zstreams wants a stream to stop in its tracks and abort, it will call the `_abortStream()` method.  Implement this to
