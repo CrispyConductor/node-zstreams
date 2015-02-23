@@ -344,6 +344,18 @@ notably the `objectMode` option should be set if it's logging objects.
 zstreams(fs.createReadStream('in.txt')).tee(new zstreams.ConsoleLogStream()).pipe(fs.createWriteStream('out.txt'));
 ````
 
+### EventReadable
+
+Given an EventEmitter, creates objects for each event.
+
+### EventTransform
+
+Transforms input events and outputs more events.
+
+### EventWritable
+
+Given a stream of event objects, emits events/crisphooks for each event object.
+
 ### FilterStream
 
 The asynchronous streaming equivalent of `Array.prototype.filter()`.
@@ -355,5 +367,4 @@ zstreams.fromArray([1, 2, 3]).pipe(new zstreams.FilterStream(function(obj, cb) {
 	// array is [2, 3]
 });
 ````
-
 

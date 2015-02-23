@@ -48,7 +48,7 @@ describe('IntersperseStream', function() {
 		});
 	});
 
-	it('should intersperse "\n" by default', function(done) {
+	it('should intersperse "\\n" by default', function(done) {
 		var readStream = new Readable({ objectMode: true });
 		readStream._read = function() {
 			this.push('a');
