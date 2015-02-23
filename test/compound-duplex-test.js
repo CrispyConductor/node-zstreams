@@ -34,14 +34,14 @@ describe('CompoundDuplex', function() {
 			CompoundDuplex.call(this,
 				new PassThrough()
 				.pipe(new SplitStream(' '))
-				.throughSync(function(str) {
+				.throughSync(function() {
 					throw new Error('Test error');
 				})
 			);
 		}
 		inherits(TestCompoundDuplexStream, CompoundDuplex);
 
-		zstreams.fromString('Hello World').pipe(new TestCompoundDuplexStream()).intoArray(function(error, array) {
+		zstreams.fromString('Hello World').pipe(new TestCompoundDuplexStream()).intoArray(function(error) {
 			expect(error).to.exist;
 			done();
 		});

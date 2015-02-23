@@ -5,7 +5,6 @@ var PassThrough = zstreams.PassThrough;
 var StringReadableStream = zstreams.StringReadableStream;
 var ThroughStream = zstreams.ThroughStream;
 var StringWritableStream = zstreams.StringWritableStream;
-var inherits = require('util').inherits;
 
 describe('Error Handling', function() {
 
@@ -40,7 +39,7 @@ describe('Error Handling', function() {
 			.pipe(errorEmittingStream)
 			.pipe(passThrough3)
 			.pipe(passThrough4)
-			.pipe(stringWritableStream)
+			.pipe(stringWritableStream);
 
 		function verifyErrors() {
 			expect(errorStreams.length).to.equal(7);
@@ -60,7 +59,6 @@ describe('Error Handling', function() {
 
 	it('should destruct a pipeline on unignored errors', function(done) {
 
-		var errorThrown = false;
 		var unpipeCount = 0;
 
 		var stringReadableStream = new StringReadableStream('Hello World', { chunkSize: 3 });

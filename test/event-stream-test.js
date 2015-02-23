@@ -5,7 +5,6 @@ var EventReadable = zstreams.EventReadable;
 var EventWritable = zstreams.EventWritable;
 var EventTransform = zstreams.EventTransform;
 var EventEmitter = require('events').EventEmitter;
-var inherits = require('util').inherits;
 
 describe('Event Streams', function() {
 
