@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 
 var zstreams = require('../lib');
-var ES6Promise = Promise || require('es6-promise').Promise;
+var Promise = Promise || require('es6-promise').Promise;
 
 describe('mixin/_writable', function() {
 	it('should convert a writable into a promise', function(done) {
@@ -9,7 +9,7 @@ describe('mixin/_writable', function() {
 			cb();
 		}).intoPromise();
 
-		expect(promise).to.be.instanceof(ES6Promise);
+		expect(promise).to.be.instanceof(Promise);
 
 		promise.then(function() {
 			done();
@@ -24,7 +24,7 @@ describe('mixin/_writable', function() {
 			cb(new Error('Expected error'));
 		}).each(function(entry, cb) { cb(); }).intoPromise();
 
-		expect(promise).to.be.instanceof(ES6Promise);
+		expect(promise).to.be.instanceof(Promise);
 
 		promise.then(function() {
 			done(new Error('Shouldn\'t be here'));
