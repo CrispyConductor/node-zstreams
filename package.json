@@ -15,11 +15,11 @@
   "dependencies": {
     "crisphooks": "0.0.1",
     "extend": "^2.0.0",
-    "jshint": "^2.6.0",
     "readable-stream": "^1.0.33"
   },
   "devDependencies": {
     "chai": "^2.0.0",
+    "jshint": "^2.6.0",
     "mocha": "^2.1.0",
     "request": "^2.53.0"
   }
