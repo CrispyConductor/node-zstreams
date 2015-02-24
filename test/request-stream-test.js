@@ -6,7 +6,6 @@ var request = require('request');
 
 function TestServer(port) {
 	var server = http.createServer(function(request, response) {
-			console.log('writing response');
 		if(request.method === 'GET' && request.url === '/testdata') {
 			response.writeHead(200);
 			var counter = 0;
@@ -57,11 +56,10 @@ describe('Request Streams', function() {
 			expect(error).to.not.exist;
 			var nextExpected = 0;
 
-			var req = request({
+			zstreams(request({
 				url: server.getURLBase() + '/testdata',
 				method: 'GET'
-			});
-			zstreams(req).split(',').each(function(obj, cb) {
+			})).split(',').each(function(obj, cb) {
 				var num = parseInt(obj, 10);
 				expect(num).to.equal(nextExpected);
 				nextExpected++;
@@ -74,111 +72,110 @@ describe('Request Streams', function() {
 					done();
 				});
 			});
-			req.end();
 		});
 
 	});
 
-	// it('should allow streaming data to a post request', function(done) {
-	// 	var server = new TestServer(48574);
-	// 	server.start(function(error) {
-	// 		expect(error).to.not.exist;
+	it('should allow streaming data to a post request', function(done) {
+		var server = new TestServer(48574);
+		server.start(function(error) {
+			expect(error).to.not.exist;
 
-	// 		zstreams.fromString('hello world').pipe(request({
-	// 			url: server.getURLBase() + '/echo',
-	// 			method: 'POST'
-	// 		})).intoString(function(error, str) {
-	// 			expect(error).to.not.exist;
-	// 			expect(str).to.equal('hello world');
-	// 			server.destroy(function(error) {
-	// 				expect(error).to.not.exist;
-	// 				done();
-	// 			});
-	// 		});
-	// 	});
-	// });
+			zstreams.fromString('hello world').pipe(request({
+				url: server.getURLBase() + '/echo',
+				method: 'POST'
+			})).intoString(function(error, str) {
+				expect(error).to.not.exist;
+				expect(str).to.equal('hello world');
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
+	});
 
-	// it('should handle connection errors', function(done) {
-	// 	var server = new TestServer(48575);
-	// 	server.start(function(error) {
-	// 		expect(error).to.not.exist;
-	// 		zstreams(request({
-	// 			url: server.getURLBase() + '/reset',
-	// 			method: 'GET'
-	// 		})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
-	// 			expect(error).to.exist;
-	// 			server.destroy(function(error) {
-	// 				expect(error).to.not.exist;
-	// 				done();
-	// 			});
-	// 		});
-	// 	});
-	// });
+	it('should handle connection errors', function(done) {
+		var server = new TestServer(48575);
+		server.start(function(error) {
+			expect(error).to.not.exist;
+			zstreams(request({
+				url: server.getURLBase() + '/reset',
+				method: 'GET'
+			})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
+				expect(error).to.exist;
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
+	});
 
-	// it('should handle error status codes', function(done) {
+	it('should handle error status codes', function(done) {
 
-	// 	var server = new TestServer(48576);
-	// 	server.start(function(error) {
-	// 		expect(error).to.not.exist;
+		var server = new TestServer(48576);
+		server.start(function(error) {
+			expect(error).to.not.exist;
 
-	// 		zstreams(request({
-	// 			url: server.getURLBase() + '/error',
-	// 			method: 'GET'
-	// 		})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
-	// 			expect(error).to.exist;
-	// 			server.destroy(function(error) {
-	// 				expect(error).to.not.exist;
-	// 				done();
-	// 			});
-	// 		});
-	// 	});
+			zstreams(request({
+				url: server.getURLBase() + '/error',
+				method: 'GET'
+			})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
+				expect(error).to.exist;
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
 
-	// });
+	});
 
-	// it('should read in the body for error response codes', function(done) {
-	// 	var server = new TestServer(48577);
-	// 	server.start(function(error) {
-	// 		expect(error).to.not.exist;
+	it('should read in the body for error response codes', function(done) {
+		var server = new TestServer(48577);
+		server.start(function(error) {
+			expect(error).to.not.exist;
 
-	// 		zstreams(request({
-	// 			url: server.getURLBase() + '/error',
-	// 			method: 'GET'
-	// 		})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
-	// 			expect(error).to.exist;
-	// 			expect(error.responseBody).to.equal('test error');
-	// 			server.destroy(function(error) {
-	// 				expect(error).to.not.exist;
-	// 				done();
-	// 			});
-	// 		});
-	// 	});
-	// });
+			zstreams(request({
+				url: server.getURLBase() + '/error',
+				method: 'GET'
+			})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
+				expect(error).to.exist;
+				expect(error.responseBody).to.equal('test error');
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
+	});
 
-	// it('should work when called via the convenience function', function(done) {
+	it('should work when called via the convenience function', function(done) {
 
-	// 	var server = new TestServer(48578);
-	// 	server.start(function(error) {
-	// 		expect(error).to.not.exist;
-	// 		var nextExpected = 0;
+		var server = new TestServer(48578);
+		server.start(function(error) {
+			expect(error).to.not.exist;
+			var nextExpected = 0;
 
-	// 		zstreams.request({
-	// 			url: server.getURLBase() + '/testdata',
-	// 			method: 'GET'
-	// 		}).split(',').each(function(obj, cb) {
-	// 			var num = parseInt(obj, 10);
-	// 			expect(num).to.equal(nextExpected);
-	// 			nextExpected++;
-	// 			cb();
-	// 		}).intoCallback(function(error) {
-	// 			expect(error).to.not.exist;
-	// 			expect(nextExpected).to.equal(300);
-	// 			server.destroy(function(error) {
-	// 				expect(error).to.not.exist;
-	// 				done();
-	// 			});
-	// 		});
-	// 	});
+			zstreams.request({
+				url: server.getURLBase() + '/testdata',
+				method: 'GET'
+			}).split(',').each(function(obj, cb) {
+				var num = parseInt(obj, 10);
+				expect(num).to.equal(nextExpected);
+				nextExpected++;
+				cb();
+			}).intoCallback(function(error) {
+				expect(error).to.not.exist;
+				expect(nextExpected).to.equal(300);
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
 
-	// });
+	});
 
 });
