@@ -50,7 +50,7 @@ TestServer.prototype.getURLBase = function() {
 describe('Request Streams', function() {
 
 	it('should return streaming data from a get request', function(done) {
-	
+
 		var server = new TestServer(48573);
 		server.start(function(error) {
 			expect(error).to.not.exist;
