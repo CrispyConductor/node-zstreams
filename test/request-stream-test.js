@@ -140,9 +140,10 @@ describe('Request Streams', function() {
 			zstreams(request({
 				url: server.getURLBase() + '/error',
 				method: 'GET'
-			})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
+			})).intoString(function(error, str) {
 				expect(error).to.exist;
 				expect(error.responseBody).to.equal('test error');
+				expect(str).to.not.exist;
 				server.destroy(function(error) {
 					expect(error).to.not.exist;
 					done();

@@ -3,8 +3,8 @@ var expect = require('chai').expect;
 var zstreams = require('../lib');
 var Stream = require('stream').Stream;
 
-describe('Streams1 Wrap', function() {
-	it('should wrap a "readable"', function(done) {
+describe('Classic Streams', function() {
+	it('should wrap a classic "readable"', function(done) {
 		var readable = new Stream();
 		readable.readable = true;
 
@@ -22,7 +22,7 @@ describe('Streams1 Wrap', function() {
 		readable.emit('end');
 	});
 
-	it('should handle "readable" errors', function(done) {
+	it('should handle classic "readable" errors', function(done) {
 		var readable = new Stream();
 		readable.readable = true;
 
@@ -35,7 +35,7 @@ describe('Streams1 Wrap', function() {
 		readable.emit('error', new Error('"readable" error'));
 	});
 
-	it('should wrap a "writable"', function(done) {
+	it('should wrap a classic "writable"', function(done) {
 		var writable = new Stream();
 		writable.writable = true;
 
@@ -61,7 +61,7 @@ describe('Streams1 Wrap', function() {
 		});
 	});
 
-	it('should handle "writable" errors', function(done) {
+	it('should handle classic "writable" errors', function(done) {
 		var writable = new Stream();
 		writable.writable = true;
 		writable.write = function(/*buf*/) {
@@ -85,7 +85,7 @@ describe('Streams1 Wrap', function() {
 		});
 	});
 
-	it('should wrap a "duplex"', function(done) {
+	it('should wrap a classic "duplex"', function(done) {
 		var duplex = new Stream();
 		duplex.readable = true;
 		duplex.writable = true;
@@ -118,7 +118,7 @@ describe('Streams1 Wrap', function() {
 			});
 	});
 
-	it('should handle "duplex" errors', function(done) {
+	it('should handle classic "duplex" errors', function(done) {
 		var duplex = new Stream();
 		duplex.readable = true;
 		duplex.writable = true;
