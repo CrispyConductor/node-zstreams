@@ -3,9 +3,8 @@ var expect = require('chai').expect;
 var zstreams = require('../lib');
 var http = require('http');
 var request = require('request');
-var RequestStream = zstreams.RequestStream;
 
-function TestServer() {
+function TestServer(port) {
 	var server = http.createServer(function(request, response) {
 		if(request.method === 'GET' && request.url === '/testdata') {
 			response.writeHead(200);
@@ -33,7 +32,7 @@ function TestServer() {
 		}
 	});
 	this.server = server;
-	this.port = 48573;
+	this.port = port;
 }
 
 TestServer.prototype.start = function(cb) {
@@ -52,7 +51,7 @@ describe('Request Streams', function() {
 
 	it('should return streaming data from a get request', function(done) {
 
-		var server = new TestServer();
+		var server = new TestServer(48573);
 		server.start(function(error) {
 			expect(error).to.not.exist;
 			var nextExpected = 0;
@@ -78,7 +77,7 @@ describe('Request Streams', function() {
 	});
 
 	it('should allow streaming data to a post request', function(done) {
-		var server = new TestServer();
+		var server = new TestServer(48574);
 		server.start(function(error) {
 			expect(error).to.not.exist;
 
@@ -97,7 +96,7 @@ describe('Request Streams', function() {
 	});
 
 	it('should handle connection errors', function(done) {
-		var server = new TestServer();
+		var server = new TestServer(48575);
 		server.start(function(error) {
 			expect(error).to.not.exist;
 			zstreams(request({
@@ -115,7 +114,7 @@ describe('Request Streams', function() {
 
 	it('should handle error status codes', function(done) {
 
-		var server = new TestServer();
+		var server = new TestServer(48576);
 		server.start(function(error) {
 			expect(error).to.not.exist;
 
@@ -134,16 +133,17 @@ describe('Request Streams', function() {
 	});
 
 	it('should read in the body for error response codes', function(done) {
-		var server = new TestServer();
+		var server = new TestServer(48577);
 		server.start(function(error) {
 			expect(error).to.not.exist;
 
 			zstreams(request({
 				url: server.getURLBase() + '/error',
 				method: 'GET'
-			})).pipe(new zstreams.BlackholeStream()).intoCallback(function(error) {
+			})).intoString(function(error, str) {
 				expect(error).to.exist;
 				expect(error.responseBody).to.equal('test error');
+				expect(str).to.not.exist;
 				server.destroy(function(error) {
 					expect(error).to.not.exist;
 					done();
@@ -154,7 +154,7 @@ describe('Request Streams', function() {
 
 	it('should work when called via the convenience function', function(done) {
 
-		var server = new TestServer();
+		var server = new TestServer(48578);
 		server.start(function(error) {
 			expect(error).to.not.exist;
 			var nextExpected = 0;

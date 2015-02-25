@@ -17,11 +17,11 @@ describe('levelup', function() {
 
 		zstreams
 			.fromArray(testArray)
-			.pipe(db.createWriteStream())
+			.pipe(db.createWriteStream(), { objectMode: true })
 			.intoCallback(function(error) {
 				expect(error).to.not.exist;
 
-				zstreams(db.createReadStream())
+				zstreams(db.createReadStream(), { objectMode: true })
 					.intoArray(function(error, array) {
 						expect(error).to.not.exist;
 						expect(array).to.be.instanceof(Array);
