@@ -26,10 +26,7 @@ describe('CompoundDuplex', function() {
 			}))
 			.intoArray(function(error, array) {
 				expect(error).to.not.exist;
-				expect(array).to.be.instanceof(Array);
-				expect(array).to.have.length(2);
-				expect(array).to.contain('HELLO');
-				expect(array).to.contain('WORLD');
+				expect(array).to.deep.equal(['HELLO', 'WORLD']);
 				done();
 			});
 
@@ -62,10 +59,7 @@ describe('CompoundDuplex', function() {
 			.intoArray(function(error, array) {
 				console.log(array);
 				expect(error).to.not.exist;
-				expect(array).to.be.instanceof(Array);
-				expect(array).to.have.length(2);
-				expect(array).to.contain('HELLO');
-				expect(array).to.contain('WORLDAGAIN');
+				expect(array).to.deep.equal(['HELLO', 'WORLDAGAIN']);
 				done();
 			});
 	});
