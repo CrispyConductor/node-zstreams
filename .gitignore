@@ -21,3 +21,5 @@ zs-api.sublime-project
 zs-api.sublime-workspace
 
 coverage
+
+.DS_Store
