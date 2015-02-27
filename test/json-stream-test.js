@@ -1,14 +1,14 @@
 var expect = require('chai').expect;
 var fs = require('fs');
 
-var JSONStream = require('../lib/streams/json-stream');
+var JSONParseStream = require('../lib/streams/json-parse-stream');
 
-describe('JSONStream', function() {
+describe('JSONParseStream', function() {
 	it('should parse a json file into object', function(done) {
 		var readStream = fs.createReadStream('./assets/sample.json');
-		var jsonStream = new JSONStream();
+		var jsonParseStream = new JSONParseStream();
 		readStream
-		.pipe(jsonStream)
+		.pipe(jsonParseStream)
 		.on('data', function (data){
 			console.log(data);
 			expect(data).to.be.an('object');
