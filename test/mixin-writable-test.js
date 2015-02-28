@@ -1,7 +1,9 @@
 var expect = require('chai').expect;
 
 var zstreams = require('../lib');
+/* jshint ignore:start */
 var Promise = Promise || require('es6-promise').Promise;
+/* jshint ignore:end */
 
 describe('mixin/_writable', function() {
 	it('should convert a writable into a promise', function(done) {
