@@ -89,7 +89,6 @@ describe('Writable._write', function () {
 	});
 });
 
-
 //TODO: add test for write flush when supported
 
 describe('Duplex._read', function() {
@@ -176,8 +175,51 @@ describe('Duplex._write', function () {
 	});
 });
 
-//TODO: add test for duplex flush when supported
-/* 
+describe('Duplex._flush', function () {
+	describe('data mode', function() {
+		it('should verify flush is called', function(done) {
+			var flushed = false;
+			var duplexStream = new Duplex({
+				write: function(chunk, encoding, cb) {
+					cb();
+				},
+				flush: function(cb) {
+					flushed = true;
+					cb();
+				}
+			});
+			zstreams.fromString('abcd')
+				.pipe(duplexStream)
+				.intoCallback(function(error) {
+					expect(error).to.not.exist;
+					expect(flushed).to.be.true;
+					done();
+				});
+		});
+	});
+	describe('object mode', function() {
+		it('should verify flush is called', function(done) {
+			var flushed = false;
+			var duplexStream = new Duplex({
+				objectMode: true,
+				write: function(chunk, encoding, cb) {
+					cb();
+				},
+				flush: function(cb) {
+					flushed = true;
+					cb();
+				}
+			});
+			zstreams.fromString('abcd')
+				.pipe(duplexStream)
+				.intoCallback(function(error) {
+					expect(error).to.not.exist;
+					expect(flushed).to.be.true;
+					done();
+				});
+		});
+	});
+});
 
 describe('Transform._transform', function () {
 	describe('data mode', function() {
