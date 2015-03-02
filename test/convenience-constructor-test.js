@@ -59,7 +59,7 @@ describe('Writable._write', function () {
 				}
 			});
 			var count = 0;
-			zstreams.fromString(readString, {chunkSize: 1})
+			zstreams.fromString('abcd', {chunkSize: 1})
 				.pipe(writeStream)
 				.intoCallback(function(error) {
 					expect(error).to.not.exist;
