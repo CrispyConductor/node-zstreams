@@ -178,43 +178,48 @@ describe('Duplex._write', function () {
 
 //TODO: add test for duplex flush when supported
 /* 
+
 describe('Transform._transform', function () {
 	describe('data mode', function() {
-		it('should...', function(done) {
+		it('should prove that empty transform does nothing, but works', function(done) {
 			var transformStream = new Transform ({
-				transform: function(data, encoding, cb) {
+				transform: function(chunk, encoding, cb) {
+					this.push(chunk);
+					this.push('abcd');
 					cb();
 				}
 			});
-			transformStream.intoString(function(error, str) {
+			zstreams.fromString('abcd')
+			.pipe(transformStream)
+			.intoString(function(error, str) {
 				expect(error).to.not.exist;
-				expect(str).to.have.length(4);
+				expect(str).to.have.length(8);
 				expect(str).to.be.a('string');
 				done();
 			});
 		});
 	});
-	/*
 	describe('object mode', function() {
-		it('should receive the Readable stream', function(done) {
+		it('should prove that empty transform does nothing, but works', function(done) {
 			var transformStream = new Transform ({
 				objectMode: true,
 				transform: function(chunk, encoding, cb) {
+					this.push(chunk);
+					this.push('abcd');
 					cb();
 				}
 			});
-			transformStream.intoString(function(error, str) {
+			zstreams.fromString('abcd')
+			.pipe(transformStream)
+			.intoString(function(error, str) {
 				expect(error).to.not.exist;
-				expect(str).to.have.length(0);
+				expect(str).to.have.length(8);
 				expect(str).to.be.a('string');
 				done();
 			});
 		});
 	});
-*/
-//});
-
-/*
+});
 
 describe('Transform._flush', function () {
 	describe('data mode', function() {
