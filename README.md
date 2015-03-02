@@ -127,6 +127,11 @@ zstreams.request('http://www.google.com').intoFile('/tmp/output.html', function(
 	// entire response body for the error response will be available as error.responseBody .
 });
 
+// Or pass your request directly into zstreams to automatically convert
+zstreams(request('http://www.google.com')).intoFile('/tmp/output.html', function(error) {
+	// ...
+});
+
 // You can also override the default options
 zstreams.request({
 	url: 'http://www.google.com',
@@ -344,6 +349,18 @@ notably the `objectMode` option should be set if it's logging objects.
 zstreams(fs.createReadStream('in.txt')).tee(new zstreams.ConsoleLogStream()).pipe(fs.createWriteStream('out.txt'));
 ````
 
+### EventReadable
+
+Given an EventEmitter, creates objects for each event.
+
+### EventTransform
+
+Transforms input events and outputs more events.
+
+### EventWritable
+
+Given a stream of event objects, emits events/crisphooks for each event object.
+
 ### FilterStream
 
 The asynchronous streaming equivalent of `Array.prototype.filter()`.
@@ -356,4 +373,56 @@ zstreams.fromArray([1, 2, 3]).pipe(new zstreams.FilterStream(function(obj, cb) {
 });
 ````
 
+### SkipStream
 
+Skip over objects/bytes from a Readable stream
+
+```javascript
+zstreams.fromArray([1, 2, 3, 4])
+	.pipe(new zstreams.SkipStream(2, { objectMode: true })
+	.intoArray(function(error, array) {
+		// array is [3, 4]
+	});
+```
+
+### LimitStream
+
+Limit objects/bytes from a Readable stream
+
+```javascript
+zstreams.fromArray([1, 2, 3, 4])
+	.pipe(new zstreams.LimitStream(2, { objectMode: true })
+	.intoArray(function(error, array) {
+		// array is [1, 2]
+	});
+```
+
+### ClassicReadable
+
+Wrap a classic "readable" (Streams1) stream
+
+```javascript
+new zstreams.ClassicReadable(readable, { objectMode: true }).intoArray(function(error, array) {
+	// Do something with the array
+});
+```
+
+### ClassicWritable
+
+Wrap a classic "writable" (Streams1) stream
+
+```javascript
+zstreams.fromArrray([1, 2, 3, 4]).pipe(new ClassicWritable(writable, { objectMode: true })).intoCallback(function(error) {
+	// Do something
+});
+```
+
+### ClassicDuplex
+
+Wrap a classic "duplex" (Streams1) stream
+
+```javascript
+zstreams.fromArray([1, 2, 3, 4]).pipe(new ClassicDuplex(duplex, { objectMode: true })).intoArray(function(error, array) {
+	// array is [1, 2, 3, 4]
+});
+```
