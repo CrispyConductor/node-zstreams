@@ -51,36 +51,40 @@ describe('iojs simplified stream constructors', function() {
 
 describe('Writable._write', function () {
 	describe('data mode', function() {
-		it('should receive the Readable stream', function(done) {
+		it('should call write 4 times, once for each character in the buffer', function(done) {
 			var writeStream = new Writable({
 				write: function(chunk, encoding, cb) {
+					count++;
 					cb();
 				}
 			});
-			count = 0;
-			zstreams.fromString('abcd', {chunkSize: 1}).pipe(writeStream).intoCallback(function(error) {
-				expect(error).to.not.exist;
-				count++;
-				expect(count).to.equal(1);
-				done();
-			});
+			var count = 0;
+			zstreams.fromString(readString, {chunkSize: 1})
+				.pipe(writeStream)
+				.intoCallback(function(error) {
+					expect(error).to.not.exist;
+					expect(count).to.equal(4);
+					done();
+				});
 		});
 	});
 	describe('object mode', function() {
-		it('should receive the Readable stream', function(done) {
+		it('should call write 4 times, once for each character in the buffer', function(done) {
 			var writeStream = new Writable({
 				objectMode: true,
 				write: function(chunk, encoding, cb) {
+					count++;
 					cb();
 				}
 			});
-			count = 0;
-			zstreams.fromString('abcd', {chunkSize: 1}).pipe(writeStream).intoCallback(function(error) {
-				expect(error).to.not.exist;
-				count++;
-				expect(count).to.equal(1);
-				done();
-			});
+			var count = 0;
+			zstreams.fromString('abcd', {chunkSize: 1})
+				.pipe(writeStream)
+				.intoCallback(function(error) {
+					expect(error).to.not.exist;
+					expect(count).to.equal(4);
+					done();
+				});
 		});
 	});
 });
@@ -137,16 +141,18 @@ describe('Duplex._write', function () {
 		it('should receive the Readable stream', function(done) {
 			var duplexStream = new Duplex({
 				write: function(chunk, encoding, cb) {
+					count++;
 					cb();
 				}
 			});
-			count = 0;
-			zstreams.fromString('abcd', {chunkSize: 1}).pipe(duplexStream).intoCallback(function(error) {
-				expect(error).to.not.exist;
-				count++;
-				expect(count).to.equal(1);
-				done();
-			});
+			var count = 0;
+			zstreams.fromString('abcd', {chunkSize: 1})
+				.pipe(duplexStream)
+				.intoCallback(function(error) {
+					expect(error).to.not.exist;
+					expect(count).to.equal(4);
+					done();
+				});
 		});
 	});
 	describe('object mode', function() {
@@ -154,22 +160,24 @@ describe('Duplex._write', function () {
 			var duplexStream = new Duplex({
 				objectMode: true,
 				write: function(chunk, encoding, cb) {
+					count++
 					cb();
 				}
 			});
-			count = 0;
-			zstreams.fromString('abcd', {chunkSize: 1}).pipe(duplexStream).intoCallback(function(error) {
-				expect(error).to.not.exist;
-				count++;
-				expect(count).to.equal(1);
-				done();
-			});
+			var count = 0;
+			zstreams.fromString('abcd', {chunkSize: 1})
+				.pipe(duplexStream)
+				.intoCallback(function(error) {
+					expect(error).to.not.exist;
+					expect(count).to.equal(4);
+					done();
+				});
 		});
 	});
 });
 
 //TODO: add test for duplex flush when supported
-/*
+/* 
 describe('Transform._transform', function () {
 	describe('data mode', function() {
 		it('should...', function(done) {
