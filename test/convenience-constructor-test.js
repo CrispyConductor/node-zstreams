@@ -217,21 +217,50 @@ describe('Transform._transform', function () {
 /*
 
 describe('Transform._flush', function () {
-	it('should receive the Readable stream', function(done) {
-		var writeStream = new Writable({
-			flush: function() {
-
-			}
-		});
-		zstreams.fromString('beep boop\n').pipe(writeStream).intoCallback(function(error) {
-			expect(error).to.not.exist;
-
-			var str = writeStream.getString();
-			expect(str).to.equal('abcd');
-
-			done();
-		});
-	});	
+	describe('data mode', function() {
+		it('should verify flush is called', function(done) {
+			var flushed = false;
+			var transformStream = new Transform({
+				transform: function(chunk, encoding, cb) {
+					this.push(chunk);
+					cb();
+				},
+				flush: function(cb) {
+					flushed = true;
+					cb();
+				}
+			});
+			zstreams.fromString('beep boop\n')
+				.pipe(transformStream)
+				.intoString(function(error, str) {
+					expect(error).to.not.exist;
+					expect(flushed).to.be.true;
+					done();
+				});
+		});	
+	});
+	describe('object mode', function() {
+		it('should verify flush is called', function(done) {
+			var flushed = false;
+			var transformStream = new Transform({
+				objectMode: true,
+				transform: function(chunk, encoding, cb) {
+					this.push(chunk);
+					cb();
+				},
+				flush: function(cb) {
+					flushed = true;
+					cb();
+				}
+			});
+			zstreams.fromString('beep boop\n')
+				.pipe(transformStream)
+				.intoString(function(error, str) {
+					expect(error).to.not.exist;
+					expect(flushed).to.be.true;
+					done();
+				});
+		});	
+	});
 });
-*/
 });
