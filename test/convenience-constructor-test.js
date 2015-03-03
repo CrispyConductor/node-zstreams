@@ -133,9 +133,11 @@ describe('Writable._flush', function () {
 	});
 });
 
-describe('Duplex._read', function() {
+describe('Duplex._read/write', function() {
 	describe('data mode', function() {
-		it('should match what the writable contains', function(done) {
+		it('should match what the writable contains, call the readable once', function(done) {
+			var count = 0;
+			var readCount = 0;
 			var duplexStream = new Duplex({
 				read: function() {
 					this.push('a');
@@ -143,74 +145,51 @@ describe('Duplex._read', function() {
 					this.push('c');
 					this.push('d');
 					this.push(null);
-				}
-			});
-			duplexStream.intoString(function(error, str) {
-				expect(error).to.not.exist;
-				expect(str).to.have.length(4);
-				expect(str).to.be.a('string');
-				done();
-			});
-		});
-	});
-
-	describe('object mode', function() {
-		it('should match what the writable contains', function(done) {
-			var duplexStream = new Duplex({
-				objectMode: true,
-				read: function() {
-					this.push('a');
-					this.push('b');
-					this.push('c');
-					this.push('d');
-					this.push(null);
-				}
-			});
-			duplexStream.intoString(function(error, str) {
-				expect(error).to.not.exist;
-				expect(str).to.have.length(4);
-				expect(str).to.be.a('string');
-				done();
-			});
-		});
-	});
-});
-
-
-describe('Duplex._write', function () {
-	describe('data mode', function() {
-		it('should receive the Readable stream', function(done) {
-			var duplexStream = new Duplex({
+					readCount++;
+				},
 				write: function(chunk, encoding, cb) {
 					count++;
 					cb();
 				}
 			});
-			var count = 0;
-			zstreams.fromString('abcd', {chunkSize: 1})
-				.pipe(duplexStream)
-				.intoCallback(function(error) {
+			duplexStream.pipe(duplexStream)
+				.intoString(function(error, str) {
 					expect(error).to.not.exist;
+					expect(str).to.have.length(4);
+					expect(str).to.be.a('string');
 					expect(count).to.equal(4);
+					expect(readCount).to.equal(1);
 					done();
 				});
 		});
 	});
+
 	describe('object mode', function() {
-		it('should receive the Readable stream', function(done) {
+		it('should match what the writable contains, call the readable once', function(done) {
+			var count = 0;
+			var readCount = 0;
 			var duplexStream = new Duplex({
 				objectMode: true,
+				read: function() {
+					this.push('a');
+					this.push('b');
+					this.push('c');
+					this.push('d');
+					this.push(null);
+					readCount++;
+				},
 				write: function(chunk, encoding, cb) {
-					count++
+					count++;
 					cb();
 				}
 			});
-			var count = 0;
-			zstreams.fromString('abcd', {chunkSize: 1})
-				.pipe(duplexStream)
-				.intoCallback(function(error) {
+			duplexStream.pipe(duplexStream)
+				.intoString(function(error, str) {
 					expect(error).to.not.exist;
+					expect(str).to.have.length(4);
+					expect(str).to.be.a('string');
 					expect(count).to.equal(4);
+					expect(readCount).to.equal(1);
 					done();
 				});
 		});
