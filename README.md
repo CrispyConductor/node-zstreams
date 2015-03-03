@@ -20,10 +20,41 @@ var Writable = zstreams.Writable,
 The base zstreams function like, and inherit from, the native Node.JS streams.  They mostly behave like their
 parents, with
 
+### Simplified Constructors
+
+Zstreams supports iojs simplified stream constructors as seen [here](https://iojs.org/api/stream.html#stream_simplified_constructor_api).
+
+Additionally the `_flush` method has been added to writable and duplex streams.
+
+````javascript
+var writeStream = new Writable({
+	objectMode: true,
+	write: function(chunk, encoding, cb) {
+		cb();
+	},
+	flush: function(cb) {
+		cb();
+	}
+});
+
+var duplexStream = new Duplex({
+	write: function(chunk, encoding, cb) {
+		cb();
+	},
+	read: function() {
+
+	},
+	flush: function(cb) {
+		cb();
+	}
+});
+````
+
 ### Converting Native Streams
 
 ````javascript
-var fs = require('fs');
+var fs = require('fs').
+
 var readStream = zstreams(fs.createReadStream('./file.txt'));
 // Also equivalent to:
 var readStream = zstreams.fromFile('./file.txt');
