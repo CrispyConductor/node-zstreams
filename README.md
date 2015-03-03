@@ -53,8 +53,7 @@ var duplexStream = new Duplex({
 ### Converting Native Streams
 
 ````javascript
-var fs = require('fs').
-
+var fs = require('fs');
 var readStream = zstreams(fs.createReadStream('./file.txt'));
 // Also equivalent to:
 var readStream = zstreams.fromFile('./file.txt');
