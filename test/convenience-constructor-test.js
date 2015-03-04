@@ -200,7 +200,16 @@ describe('Duplex._flush', function () {
 	describe('data mode', function() {
 		it('should verify flush is called', function(done) {
 			var flushed = false;
+			var readCount = 0;
 			var duplexStream = new Duplex({
+				read: function() {
+					this.push('a');
+					this.push('b');
+					this.push('c');
+					this.push('d');
+					this.push(null);
+					readCount++;
+				},
 				write: function(chunk, encoding, cb) {
 					cb();
 				},
@@ -209,11 +218,13 @@ describe('Duplex._flush', function () {
 					cb();
 				}
 			});
-			zstreams.fromString('abcd')
-				.pipe(duplexStream)
-				.intoCallback(function(error) {
+			duplexStream.pipe(duplexStream)
+				.intoString(function(error, str) {
 					expect(error).to.not.exist;
 					expect(flushed).to.be.true;
+					expect(str).to.have.length(4);
+					expect(str).to.be.a('string');
+					expect(readCount).to.equal(1);
 					done();
 				});
 		});
@@ -221,8 +232,17 @@ describe('Duplex._flush', function () {
 	describe('object mode', function() {
 		it('should verify flush is called', function(done) {
 			var flushed = false;
+			var readCount = 0;
 			var duplexStream = new Duplex({
 				objectMode: true,
+				read: function() {
+					this.push('a');
+					this.push('b');
+					this.push('c');
+					this.push('d');
+					this.push(null);
+					readCount++;
+				},
 				write: function(chunk, encoding, cb) {
 					cb();
 				},
@@ -231,11 +251,13 @@ describe('Duplex._flush', function () {
 					cb();
 				}
 			});
-			zstreams.fromString('abcd')
-				.pipe(duplexStream)
-				.intoCallback(function(error) {
+			duplexStream.pipe(duplexStream)
+				.intoString(function(error, str) {
 					expect(error).to.not.exist;
 					expect(flushed).to.be.true;
+					expect(str).to.have.length(4);
+					expect(str).to.be.a('string');
+					expect(readCount).to.equal(1);
 					done();
 				});
 		});
