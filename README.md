@@ -277,8 +277,6 @@ stream.isWritable();
 
 Zstreams supports iojs simplified stream constructors as seen [here](https://iojs.org/api/stream.html#stream_simplified_constructor_api).
 
-Additionally the `_flush` method has been added to writable and duplex streams.
-
 ````javascript
 var writeStream = new Writable({
 	objectMode: true,
