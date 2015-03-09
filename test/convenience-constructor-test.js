@@ -275,13 +275,13 @@ describe('Transform._transform', function () {
 				}
 			});
 			zstreams.fromString('abcd')
-			.pipe(transformStream)
-			.intoString(function(error, str) {
-				expect(error).to.not.exist;
-				expect(str).to.have.length(8);
-				expect(str).to.be.a('string');
-				done();
-			});
+				.pipe(transformStream)
+				.intoString(function(error, str) {
+					expect(error).to.not.exist;
+					expect(str).to.have.length(8);
+					expect(str).to.be.a('string');
+					done();
+				});
 		});
 	});
 	describe('object mode', function() {
@@ -295,13 +295,13 @@ describe('Transform._transform', function () {
 				}
 			});
 			zstreams.fromString('abcd')
-			.pipe(transformStream)
-			.intoString(function(error, str) {
-				expect(error).to.not.exist;
-				expect(str).to.have.length(8);
-				expect(str).to.be.a('string');
-				done();
-			});
+				.pipe(transformStream)
+				.intoString(function(error, str) {
+					expect(error).to.not.exist;
+					expect(str).to.have.length(8);
+					expect(str).to.be.a('string');
+					done();
+				});
 		});
 	});
 });
