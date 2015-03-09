@@ -273,6 +273,36 @@ stream.isReadable();
 stream.isWritable();
 ````
 
+### Simplified Constructors
+
+Zstreams supports iojs simplified stream constructors as seen [here](https://iojs.org/api/stream.html#stream_simplified_constructor_api).
+
+Additionally the `_flush` method has been added to writable and duplex streams.
+
+````javascript
+var writeStream = new Writable({
+	objectMode: true,
+	write: function(chunk, encoding, cb) {
+		cb();
+	},
+	flush: function(cb) {
+		cb();
+	}
+});
+
+var duplexStream = new Duplex({
+	write: function(chunk, encoding, cb) {
+		cb();
+	},
+	read: function() {
+
+	},
+	flush: function(cb) {
+		cb();
+	}
+});
+````
+
 ## Utility Streams
 
 zstreams also provides several utility streams on the zstreams object which may come in handy.
@@ -426,33 +456,3 @@ zstreams.fromArray([1, 2, 3, 4]).pipe(new ClassicDuplex(duplex, { objectMode: tr
 	// array is [1, 2, 3, 4]
 });
 ```
-
-### Simplified Constructors
-
-Zstreams supports iojs simplified stream constructors as seen [here](https://iojs.org/api/stream.html#stream_simplified_constructor_api).
-
-Additionally the `_flush` method has been added to writable and duplex streams.
-
-````javascript
-var writeStream = new Writable({
-	objectMode: true,
-	write: function(chunk, encoding, cb) {
-		cb();
-	},
-	flush: function(cb) {
-		cb();
-	}
-});
-
-var duplexStream = new Duplex({
-	write: function(chunk, encoding, cb) {
-		cb();
-	},
-	read: function() {
-
-	},
-	flush: function(cb) {
-		cb();
-	}
-});
-````
