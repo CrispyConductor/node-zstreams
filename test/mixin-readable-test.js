@@ -2,9 +2,6 @@ var expect = require('chai').expect;
 
 var zstreams = require('../lib');
 var file = __dirname + '/resources/abcd.json';
-var testArray = ['a', 'b', 'c', 'd', null];
-
-// zstreams.ArrayReadableStream(array);
 
 describe('mixin/_readable', function() {
 	describe('through', function() {
