@@ -9,7 +9,7 @@ describe('mixin/_readable', function() {
 			zstreams.fromFile(file).through(function(obj, cb) {
 				expect(obj.toString()).to.equal('"a"\n"b"\n"c"\n"d"\n');
 				cb(null, obj);
-			}).intoCallback(function(error) {
+			}).intoString(function(error) {
 				expect(error).to.not.exist;
 				done();
 			});
@@ -18,7 +18,7 @@ describe('mixin/_readable', function() {
 		it('should catch thrown errors and covert to stream errors', function(done) {
 			zstreams.fromFile(file).through(function(obj, cb) {
 				throw new Error();
-			}).intoCallback(function(error) {
+			}).intoString(function(error) {
 				expect(error).to.exist;
 				done();
 			});
@@ -29,14 +29,18 @@ describe('mixin/_readable', function() {
 		it ('should it should catch a thrown error and covert to stream errors', function(done) {
 			zstreams.fromFile(file).split().throughSync(function(obj) {
 				throw new Error();
-			}).intoCallback(function(error) {
+			}).intoString(function(error) {
 				expect(error).to.exist;
 				done();
 			});
 		});
 		it ('should return the first line of the file', function(done) {
-			zstreams.fromFile(file).split().throughSync(function(chunk, encoding) {
-				expect(chunk).to.equal('"a"');
+			var lines = [];
+			zstreams.fromFile(file).split().throughSync(function(chunk) {
+				lines.push(chunk);
+				return chunk;
+			}).intoArray(function(error) {
+				expect(lines[0]).to.equal('"a"');
 				done();
 			});
 		});
