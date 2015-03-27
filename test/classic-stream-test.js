@@ -7,19 +7,20 @@ describe('Classic Streams', function() {
 	it('should wrap a classic "readable"', function(done) {
 		var readable = new Stream();
 		readable.readable = true;
+		zstreamReadable = zstreams(readable, { objectMode: true });
 
-		zstreams(readable, { objectMode: true }).intoArray(function(error, array) {
+		zstreamReadable.intoArray(function(error, array) {
 			expect(error).to.not.exist;
 			expect(array).to.be.instanceof(Array);
 			expect(array).to.have.length(4);
 			done();
 		});
 
-		readable.emit('data', 'a');
-		readable.emit('data', 'b');
-		readable.emit('data', 'c');
-		readable.emit('data', 'd');
-		readable.emit('end');
+		zstreamReadable.emit('data', 'a');
+		zstreamReadable.emit('data', 'b');
+		zstreamReadable.emit('data', 'c');
+		zstreamReadable.emit('data', 'd');
+		zstreamReadable.emit('end');
 	});
 
 	it('should handle classic "readable" errors', function(done) {
