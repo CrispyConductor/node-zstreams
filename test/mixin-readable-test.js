@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var fs = require('fs');
 var zstreams = require('../lib');
 var abcdFilePath = __dirname + '/resources/abcd.json';
-var inputFilePath = __dirname + '/resources/input.json';
+var outputTestFilePath = __dirname + '/resources/output.json';
 
 describe('mixin/_readable', function() {
 	describe('through', function() {
@@ -50,17 +50,21 @@ describe('mixin/_readable', function() {
 	describe('intoFile', function() {
 		it ('should write to a file and call a callback', function(done) {
 			this.timeout(30000);
-			var inputFileSize, abcdFileSize;
+			var outputFileSize, abcdFileSize;
 			zstreams.fromFile(abcdFilePath).throughSync(function(chunk) {
 				return chunk.toString('utf8').toUpperCase();
-			}).intoFile(inputFilePath, function(error) {
+			}).intoFile(outputTestFilePath, function(error) {
 				expect(error).to.not.exist;
-				fs.stat(inputFilePath, function(error, stats) {
-					inputFileSize = stats.size / 1000000000;
+				fs.stat(outputTestFilePath, function(error, stats) {
+					outputFileSize = stats.size;
 					fs.stat(abcdFilePath, function(error, stats) {
-						abcdFileSize = stats.size / 1000000000;
-						expect(abcdFileSize).to.equal(inputFileSize);
-						done();
+						abcdFileSize = stats.size;
+						expect(abcdFileSize).to.equal(outputFileSize);
+						// clean up the file
+						fs.unlink(outputTestFilePath, function (err) {
+							expect(err).to.not.exist;
+							done();
+						});
 					});
 				});
 			});
