@@ -6,7 +6,7 @@ A utility library to make node streams easier to work with, also including some 
 
 ## Documentation
 
-[Basic Usage](#basic-usage)
+[Basic Usage](#Basic-Usage)
 
 ### Types of Streams
 * [Converting Native Streams](#Converting-Native-Streams)
@@ -45,7 +45,7 @@ A utility library to make node streams easier to work with, also including some 
 * [ClassicDuplex](#classicDuplex)
 
 <a name="basic_usage"/>
-## (#Basic-Usage)
+## Basic Usage
 
 ### Requiring Object
 
