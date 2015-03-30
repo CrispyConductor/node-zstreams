@@ -13,7 +13,7 @@ A utility library to make node streams easier to work with, also including some 
 * [Arrays as Streams](#arrays_as_streams)
 * [Easy Transforms](#easy_transforms)
 * [Through Methods](#)
-* [HTTP Requests](#)
+* [HTTP Requests](#HTTP Requests)
 * [Stream Destruction and Cleanup](#)
 * [Error Handling](#)
 * [Event Streams](#)
