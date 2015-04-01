@@ -12,39 +12,40 @@ Table of contents
 ### Types of Streams
 * [Requiring Object](#requiring-object)
 * [Converting Native Streams](#converting-native-streams)
-* [Arrays as Streams](#treat-arrays-as-streams)
+* [Treat Arrays as Streams](#treat-arrays-as-streams)
 * [Easy Transforms](#easy-transforms)
 * [Through Methods](#through-methods)
 * [HTTP Requests](#http-requests)
-* [Stream Destruction and Cleanup](#)
-* [Error Handling](#)
-* [Event Streams](#)
-* [Other Useful Functions](#)
-* [Simplified Constructors](#)
-* [Utility Streams](#)
-* [ArrayReabableStream](#)
-* [ArrayWritableStreams](#)
-* [BatchStream](#)
-* [BlackholeStream](#)
-* [CompoundDuplex](#)
-* [ConsoleLogStream](#)
-* [EventReadableStream](#)
-* [EventWritableStream](#)
-* [EventTransformStream](#)
-* [FilterStream](#)
-* [SkipStream](#)
-* [LimitStream](#)
-* [FunctionStream](#) needs to be added to readme
-* [IntersperseStream](#) needs to be added to readme
-* [PluckStream](#) needs to be added to readme
-* [RequestStream](#) needs to be added to readme
-* [SplitStream](#) needs to be added to readme
-* [StringReadableStream](#) needs to be added to readme
-* [StringWritableStream](#) needs to be added to readme
-* [ThroughStream](#) needs to be added to readme
-* [ClassicReadable](#)
-* [ClassicWritable](#)
-* [ClassicDuplex](#classicDuplex)
+* [Stream Destruction and Cleanup](#stream-destruction-and-cleanup)
+* [Error Handling](#error-handling)
+* [Event Streams](#event-streams)
+* [Other Useful Functions](#other-useful-functoins)
+* [Simplified Constructors](#simplified-constructors)
+* [Utility Streams](#utility-streams)
+	* [ArrayReabableStream](#arrayreadablestream)
+	* [ArrayWritableStreams](#arraywritablestream)
+	* [BatchStream](#batchstream)
+	* [BlackholeStream](#blackholestream)
+	* [CompoundDuplex](#compoundstream)
+	* [ConsoleLogStream](#consolelogstream)
+	* [EventReadableStream](#eventreadable)
+	* [EventWritableStream](#eventwritable)
+	* [EventTransformStream](#eventtransform)
+	* [FilterStream](#filterstream)
+	* [SkipStream](#skipstream)
+	* [LimitStream](#limitstream)
+	* [FunctionStream](#functionstream)
+	* [IntersperseStream](#interspersestream)
+	* [PluckStream](#pluckstream)
+	* [RequestStream](#requeststream) needs usage
+	* [SplitStream](#splitstream)
+	* [StringReadableStream](#stringreadablestream) needs usage
+	* [StringWritableStream](#stringwritablestream)
+	* [ThroughStream](#throughstream) needs to be added to readme
+* [Classic Streams](#classic-streams)
+	* [ClassicReadable](#classicreadable)
+	* [ClassicWritable](#classicwritable)
+	* [ClassicDuplex](#classicduplex)
 
 Basic Usage
 ===========
@@ -364,6 +365,7 @@ Utility Streams
 zstreams also provides several utility streams on the zstreams object which may come in handy.
 
 ArrayReadableStream
+-------------------
 
 This is a readable object stream which will stream the object in an array.  It is the stream used by `zstreams.fromArray()`.
 
@@ -493,6 +495,145 @@ zstreams.fromArray([1, 2, 3, 4])
 		// array is [1, 2]
 	});
 ```
+
+FunctionStream
+--------------
+
+Takes a function with a callback and pushes its output on read.
+ObjectMode will always be true.
+
+```
+FunctionStream(function(cb) {
+	var ret = null;
+	if(times++ < 400) {
+		ret = 'a';
+	}
+	cb(null, ret);
+}).intoArray(function(error, array) {
+	// array has length 400
+});
+```
+
+IntersperseStream
+-----------------
+
+Intersperses a seperator between chunks in the stream
+
+```
+var readStream = new Readable({ objectMode: false });
+	readStream._read = function() {
+		this.push('a');
+		this.push('b');
+		this.push('c');
+		this.push('d');
+		this.push(null);
+	};
+	var is = new IntersperseStream(' ');
+	readStream.pipe(is).intoString(function(error, string) {
+		// string is now equal to 'a b c d'
+	});
+```
+
+PluckStream
+-----------
+
+Plucks a property from an incoming object. If the property doesn't exist, the object will be skipped.
+Returns an array.
+ObjectMode will always be true.
+
+```
+var readStream = new Readable({ objectMode: true });
+readStream._first = true;
+readStream._read = function() {
+	this.push({ a: 'a', value: 'b' });
+	this.push({});
+	this.push({ a: 'b' });
+	this.push({ a: 'c', value: 'another_val' });
+	this.push({ a: 'd' });
+	this.push(null);
+};
+var ps = new PluckStream('a');
+readStream.pipe(ps).intoArray(function(error, array) {
+	// array will look something like this: ['a', 'b', 'c', 'd'] order not guaranteed
+});
+```
+
+RequestStream
+-------------
+
+This stream exists for the sole purpose of wrapping the commonly used npm module 
+'request' to make it act like a real duplex stream.  The "stream" it returns is 
+not a real streams2 stream, and does not work with the zstreams conversion methods.
+
+This class will emit errors from the request stream and will also emit the 'response'
+event proxied from the request stream.  Additionally, it will emit errors if an error
+response code is received (see options.allowedStatusCodes) .  Error emitted because
+of a disallowed status code will, by default, read in the entire response body before
+emitting the error, and will assign error.responseBody to be the response body.
+
+```
+?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+```
+
+SplitStream
+-----------
+
+Splits the incoming data stream based on a delimiter.
+writableObjectMode will always be false and readableObjectMode will always be true.
+
+```
+var readStream = new Readable({ objectMode: false });
+readStream._read = function() {
+	this.push('qqqqqq qqqqqq qqqqqq qqqqqq qqqq');
+	this.push('qq qqqqqq qqqqqq qqqqqq');
+	this.push(null);
+};
+var ss = new SplitStream(' ');
+readStream.pipe(ss).intoArray(function(error, array) {
+	// each element in the array will equal 'qqqqqq'
+});
+```
+
+StringReadableStream
+--------------------
+
+A readable string that outputs data from a string given to the constructor.
+
+```
+NO TEST?!?
+```
+
+StringWritableStream
+--------------------
+
+Collects a buffer of objects being passed in to turn into a string.
+
+```
+var readStream = new Readable({ objectMode: false });
+readStream._read = function() {
+	this.push('a');
+	this.push('b');
+	this.push('c');
+	this.push('d');
+	this.push(null);
+};
+var sws = new StringWritableStream({ objectMode: false });
+readStream.pipe(sws).intoCallback(function(error) {
+	var str = sws.getString();
+	// str will equal 'abcd'
+});
+```
+
+ThroughStream
+-------------
+
+No comments!
+
+```
+NO TEST?!?
+```
+Classic Streams
+===============
 
 ClassicReadable
 ---------------
