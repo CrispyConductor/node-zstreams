@@ -57,7 +57,6 @@ describe('CompoundDuplex', function() {
 		zstreams.fromString('Hello World')
 			.pipe(compound)
 			.intoArray(function(error, array) {
-				console.log(array);
 				expect(error).to.not.exist;
 				expect(array).to.deep.equal(['HELLO', 'WORLDAGAIN']);
 				done();

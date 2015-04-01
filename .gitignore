@@ -9,7 +9,7 @@ logs
 datakeys
 /zsapi.log
 /test.log
-
+test/resources/output.json
 /.last_linter_success
 
 /test*.js
