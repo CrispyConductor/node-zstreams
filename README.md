@@ -4,12 +4,10 @@
 
 A utility library to make node streams easier to work with, also including some utility streams.
 
-Table of contents
+Table of Contents
 =================
 
-[Basic Usage](#basic-usage)
-
-### Types of Streams
+* [Basic Usage](#basic-usage)
 * [Requiring Object](#requiring-object)
 * [Converting Native Streams](#converting-native-streams)
 * [Treat Arrays as Streams](#treat-arrays-as-streams)
