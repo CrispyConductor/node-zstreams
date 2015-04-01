@@ -9,7 +9,6 @@ describe('StringReadableStream', function() {
 		var srs = new StringReadableStream(testString);
 
 		srs.intoString(function(err, str) {
-			console.log(str);
 			expect(err).to.not.exist;
 			expect(str).to.equal(testString);
 			done();
