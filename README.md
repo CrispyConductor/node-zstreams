@@ -4,9 +4,52 @@
 
 A utility library to make node streams easier to work with, also including some utility streams.
 
-## Basic Usage
+Table of Contents
+=================
 
-### Requiring Object
+* [Basic Usage](#basic-usage)
+* [Requiring Object](#requiring-object)
+* [Converting Native Streams](#converting-native-streams)
+* [Treat Arrays as Streams](#treat-arrays-as-streams)
+* [Easy Transforms](#easy-transforms)
+* [Through Methods](#through-methods)
+* [HTTP Requests](#http-requests)
+* [Stream Destruction and Cleanup](#stream-destruction-and-cleanup)
+* [Error Handling](#error-handling)
+* [Event Streams](#event-streams)
+* [Other Useful Functions](#other-useful-functoins)
+* [Simplified Constructors](#simplified-constructors)
+* [Utility Streams](#utility-streams)
+	* [ArrayReabableStream](#arrayreadablestream)
+	* [ArrayWritableStreams](#arraywritablestream)
+	* [BatchStream](#batchstream)
+	* [BlackholeStream](#blackholestream)
+	* [CompoundDuplex](#compoundstream)
+	* [ConsoleLogStream](#consolelogstream)
+	* [EventReadableStream](#eventreadable)
+	* [EventWritableStream](#eventwritable)
+	* [EventTransformStream](#eventtransform)
+	* [FilterStream](#filterstream)
+	* [SkipStream](#skipstream)
+	* [LimitStream](#limitstream)
+	* [FunctionStream](#functionstream)
+	* [IntersperseStream](#interspersestream)
+	* [PluckStream](#pluckstream)
+	* [RequestStream](#requeststream)
+	* [SplitStream](#splitstream)
+	* [StringReadableStream](#stringreadablestream)
+	* [StringWritableStream](#stringwritablestream)
+	* [ThroughStream](#throughstream)
+* [Classic Streams](#classic-streams)
+	* [ClassicReadable](#classicreadable)
+	* [ClassicWritable](#classicwritable)
+	* [ClassicDuplex](#classicduplex)
+
+Basic Usage
+===========
+
+Requiring Object
+----------------
 
 ````javascript
 var zstreams = require('zstreams');
@@ -20,7 +63,8 @@ var Writable = zstreams.Writable,
 The base zstreams function like, and inherit from, the native Node.JS streams.  They mostly behave like their
 parents, with
 
-### Converting Native Streams
+Converting Native Streams
+-------------------------
 
 ````javascript
 var fs = require('fs');
@@ -32,7 +76,9 @@ var readStream = zstreams.fromFile('./file.txt');
 Note that if you use `Readable.pipe()` on a zstream, it will automatically convert the destination to a zstream, so you
 only need to explicitly convert the first stream in a chain.
 
-### Treat Arrays as Streams
+Treat Arrays as Streams
+-----------------------
+
 ````javascript
 var array = [1, 2, 3, 4, 5];
 new zstreams.ArrayReadableStream(array).pipe(new zstreams.ConsoleLogStream());
@@ -44,7 +90,8 @@ new zstreams.ArrayReadableStream(array).pipe(something).pipe(somethingelse).toAr
 
 The `toArray()` method takes a callback that is called once, either on first error in the stream chain or with the result array.
 
-### Easy Transforms
+Easy Transforms
+---------------
 
 ````javascript
 zstreams(fs.createReadStream('./test.txt')).throughSync(function(chunk) {
@@ -52,6 +99,9 @@ zstreams(fs.createReadStream('./test.txt')).throughSync(function(chunk) {
 }).pipe(fs.createWriteStream('./uppercase.txt'));
 // Instead of .pipe(...) you can also do .intoFile('./uppercase.txt')
 ````
+
+Through Methods
+---------------
 
 A set of `through` methods are available on readables to easily transform data.  They create a Transform stream, use the supplied
 function to transform the data, pipe to the Transform stream, and return the Transform stream.  The created Transform implicitly has
@@ -110,7 +160,8 @@ readable.throughDataSync(function(object, cb) {
 
 The synchronous variants can also throw exceptions, which are converted to stream errors.
 
-### HTTP Requests
+HTTP Requests
+-------------
 
 If you install the optional dependency `request` via `npm install request`, you can use the zstreams request extensions.  These
 extensions provide the following benefits:
@@ -142,12 +193,14 @@ zstreams.request({
 });
 ````
 
-### Stream Destruction and Cleanup
+Stream Destruction and Cleanup
+------------------------------
 
 When zstreams wants a stream to stop in its tracks and abort, it will call the `_abortStream()` method.  Implement this to
 do any cleanup necessary to stop current operations, such as closing file handles and whatnot.
 
-### Error Handling
+Error Handling
+--------------
 
 When an `error` event is emitted from any zstreams, the stream will emit a `chainerror` event on itself as well as all
 streams connected to it via pipes.  This allows for error handling in one spot, like:
@@ -189,7 +242,8 @@ writable.intoCallback(function(error) {
 });
 ````
 
-## Event Streams
+Event Streams
+-------------
 
 zstreams contains a few streams that operate on events pass through the stream.  Internally, events are just converted into
 objects and passed through an object stream.  These event streams are useful because they present an EventEmitter and crisphooks
@@ -237,7 +291,8 @@ new EventReadable(emitter, [ 'testEvent1', 'testEvent2' ])
 });
 ````
 
-## Other Useful Functions
+Other Useful Functions
+----------------------
 
 ````javascript
 // List streams piping to this stream
@@ -273,7 +328,8 @@ stream.isReadable();
 stream.isWritable();
 ````
 
-### Simplified Constructors
+Simplified Constructors
+-----------------------
 
 Zstreams supports iojs simplified stream constructors as seen [here](https://iojs.org/api/stream.html#stream_simplified_constructor_api).
 
@@ -301,11 +357,13 @@ var duplexStream = new Duplex({
 });
 ````
 
-## Utility Streams
+Utility Streams
+---------------
 
 zstreams also provides several utility streams on the zstreams object which may come in handy.
 
-### ArrayReadableStream
+ArrayReadableStream
+-------------------
 
 This is a readable object stream which will stream the object in an array.  It is the stream used by `zstreams.fromArray()`.
 
@@ -314,7 +372,8 @@ var arrayReadableStream = new zstreams.ArrayReadableStream([1, 2, 3, 4]);
 arrayReadableStream.pipe(...);
 ````
 
-### ArrayWritableStream
+ArrayWritableStream
+-------------------
 
 This is a writable object stream which will store all objects it receives into an array.
 
@@ -326,7 +385,8 @@ arrayReadableStream.pipe(arrayWritableStream).intoCallback(function() {
 });
 ````
 
-### BatchStream
+BatchStream
+-----------
 
 This stream receives a stream of objects and generates a stream of arrays of batches of these objects.  Its
 constructor takes a parameter of the size of each batch.
@@ -340,11 +400,13 @@ zstreams
 	});
 ````
 
-### BlackholeStream
+BlackholeStream
+---------------
 
 Anything piped into this stream is discarded.
 
-### CompoundDuplex
+CompoundDuplexStream
+--------------------
 
 This stream allows you to construct a stream from a set of component streams piped together, acting as a single stream.
 The readableObjectMode and writableObjectMode of the CompoundDuplex stream are automatically determined.
@@ -368,7 +430,8 @@ zstream.fromFile('newlineJsonStream.txt').pipe(new NewlineSeparatedJSONParser())
 });
 ````
 
-### ConsoleLogStream
+ConsoleLogStream
+----------------
 
 Anything piped to this Writable will be logged out using console.log().  Takes the same parameters as Writable,
 notably the `objectMode` option should be set if it's logging objects.
@@ -377,19 +440,23 @@ notably the `objectMode` option should be set if it's logging objects.
 zstreams(fs.createReadStream('in.txt')).tee(new zstreams.ConsoleLogStream()).pipe(fs.createWriteStream('out.txt'));
 ````
 
-### EventReadable
+EventReadable
+-------------
 
 Given an EventEmitter, creates objects for each event.
 
-### EventTransform
-
-Transforms input events and outputs more events.
-
-### EventWritable
+EventWritable
+-------------
 
 Given a stream of event objects, emits events/crisphooks for each event object.
 
-### FilterStream
+EventTransform
+--------------
+
+Transforms input events and outputs more events.
+
+FilterStream
+------------
 
 The asynchronous streaming equivalent of `Array.prototype.filter()`.
 
@@ -401,7 +468,8 @@ zstreams.fromArray([1, 2, 3]).pipe(new zstreams.FilterStream(function(obj, cb) {
 });
 ````
 
-### SkipStream
+SkipStream
+----------
 
 Skip over objects/bytes from a Readable stream
 
@@ -413,7 +481,8 @@ zstreams.fromArray([1, 2, 3, 4])
 	});
 ```
 
-### LimitStream
+LimitStream
+-----------
 
 Limit objects/bytes from a Readable stream
 
@@ -425,7 +494,163 @@ zstreams.fromArray([1, 2, 3, 4])
 	});
 ```
 
-### ClassicReadable
+FunctionStream
+--------------
+
+Takes a function with a callback and pushes its output on read.
+ObjectMode will always be true.
+
+```
+FunctionStream(function(cb) {
+	var ret = null;
+	if(times++ < 400) {
+		ret = 'a';
+	}
+	cb(null, ret);
+}).intoArray(function(error, array) {
+	// array has length 400
+});
+```
+
+IntersperseStream
+-----------------
+
+Intersperses a seperator between chunks in the stream
+
+```
+var readStream = new Readable({ objectMode: false });
+	readStream._read = function() {
+		this.push('a');
+		this.push('b');
+		this.push('c');
+		this.push('d');
+		this.push(null);
+	};
+	var is = new IntersperseStream(' ');
+	readStream.pipe(is).intoString(function(error, string) {
+		// string is now equal to 'a b c d'
+	});
+```
+
+PluckStream
+-----------
+
+Plucks a property from an incoming object. If the property doesn't exist, the object will be skipped.
+Returns an array.
+ObjectMode will always be true.
+
+```
+var readStream = new Readable({ objectMode: true });
+readStream._first = true;
+readStream._read = function() {
+	this.push({ a: 'a', value: 'b' });
+	this.push({});
+	this.push({ a: 'b' });
+	this.push({ a: 'c', value: 'another_val' });
+	this.push({ a: 'd' });
+	this.push(null);
+};
+var ps = new PluckStream('a');
+readStream.pipe(ps).intoArray(function(error, array) {
+	// array will look something like this: ['a', 'b', 'c', 'd'] order not guaranteed
+});
+```
+
+RequestStream
+-------------
+
+This stream exists for the sole purpose of wrapping the commonly used npm module 
+'request' to make it act like a real duplex stream.  The "stream" it returns is 
+not a real streams2 stream, and does not work with the zstreams conversion methods.
+
+This class will emit errors from the request stream and will also emit the 'response'
+event proxied from the request stream.  Additionally, it will emit errors if an error
+response code is received (see options.allowedStatusCodes) .  Error emitted because
+of a disallowed status code will, by default, read in the entire response body before
+emitting the error, and will assign error.responseBody to be the response body.
+
+```
+new RequestStream(stream, options);
+```
+
+SplitStream
+-----------
+
+Splits the incoming data stream based on a delimiter.
+writableObjectMode will always be false and readableObjectMode will always be true.
+
+```
+var readStream = new Readable({ objectMode: false });
+readStream._read = function() {
+	this.push('qqqqqq qqqqqq qqqqqq qqqqqq qqqq');
+	this.push('qq qqqqqq qqqqqq qqqqqq');
+	this.push(null);
+};
+var ss = new SplitStream(' ');
+readStream.pipe(ss).intoArray(function(error, array) {
+	// each element in the array will equal 'qqqqqq'
+});
+```
+
+StringReadableStream
+--------------------
+
+A readable string that outputs data from a string given to the constructor.
+
+```
+var srs = new StringReadableStream('abcd');
+srs.intoString(function(err, str) {
+	// str is equal to 'abcd'
+});
+```
+
+StringWritableStream
+--------------------
+
+Collects a buffer of objects being passed in to turn into a string.
+
+```
+var readStream = new Readable({ objectMode: false });
+readStream._read = function() {
+	this.push('a');
+	this.push('b');
+	this.push('c');
+	this.push('d');
+	this.push(null);
+};
+var sws = new StringWritableStream({ objectMode: false });
+readStream.pipe(sws).intoCallback(function(error) {
+	var str = sws.getString();
+	// str will equal 'abcd'
+});
+```
+
+ThroughStream
+-------------
+
+A ThroughStream is an easy way to transform data.
+
+```
+var readStream = new Readable({ objectMode: false });
+readStream._read = function() {
+	this.push('a');
+	this.push('b');
+	this.push('c');
+	this.push('d');
+	this.push(null);
+};
+readStream.pipe(new ThroughStream(function(chunk, enc, cb) {
+		transformFunc.call(this, chunk, cb);
+	}, {
+		writableObjectMode: this.isReadableObjectMode(),
+		readableObjectMode: (objectMode !== undefined) ? objectMode : this.isReadableObjectMode()
+	}));
+```
+Classic Streams
+===============
+
+ClassicReadable
+---------------
 
 Wrap a classic "readable" (Streams1) stream
 
@@ -435,7 +660,8 @@ new zstreams.ClassicReadable(readable, { objectMode: true }).intoArray(function(
 });
 ```
 
-### ClassicWritable
+ClassicWritable
+---------------
 
 Wrap a classic "writable" (Streams1) stream
 
@@ -445,7 +671,8 @@ zstreams.fromArrray([1, 2, 3, 4]).pipe(new ClassicWritable(writable, { objectMod
 });
 ```
 
-### ClassicDuplex
+ClassicDuplex
+-------------
 
 Wrap a classic "duplex" (Streams1) stream
 
