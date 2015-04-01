@@ -18,7 +18,7 @@ var Writable = zstreams.Writable,
 ````
 
 The base zstreams function like, and inherit from, the native Node.JS streams.  They mostly behave like their
-parents, with
+parents, with error handling and convenience streams.
 
 ### Converting Native Streams
 
