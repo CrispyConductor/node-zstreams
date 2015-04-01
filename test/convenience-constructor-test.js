@@ -92,6 +92,7 @@ describe('Writable._write', function () {
 describe('Writable._flush', function () {
 	describe('data mode', function() {
 		it('should verify flush is called', function(done) {
+			var flushed = false;
 			var writeStream = new Writable({
 				write: function(chunk, encoding, cb) {
 					cb();
@@ -112,6 +113,7 @@ describe('Writable._flush', function () {
 	});
 	describe('object mode', function() {
 		it('should verify flush is called', function(done) {
+			var flushed = false;
 			var writeStream = new Writable({
 				objectMode: true,
 				write: function(chunk, encoding, cb) {
@@ -322,7 +324,7 @@ describe('Transform._flush', function () {
 			});
 			zstreams.fromString('beep boop\n')
 				.pipe(transformStream)
-				.intoString(function(error, str) {
+				.intoString(function(error) {
 					expect(error).to.not.exist;
 					expect(flushed).to.be.true;
 					done();
@@ -345,7 +347,7 @@ describe('Transform._flush', function () {
 			});
 			zstreams.fromString('beep boop\n')
 				.pipe(transformStream)
-				.intoString(function(error, str) {
+				.intoString(function(error) {
 					expect(error).to.not.exist;
 					expect(flushed).to.be.true;
 					done();
