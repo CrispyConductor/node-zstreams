@@ -7,12 +7,14 @@ A utility library to make node streams easier to work with, also including some 
 Table of Contents
 =================
 
+* [Why](#why)
 * [Basic Usage](#basic-usage)
 * [Requiring Object](#requiring-object)
 * [Converting Native Streams](#converting-native-streams)
 * [Treat Arrays as Streams](#treat-arrays-as-streams)
 * [Easy Transforms](#easy-transforms)
 * [Through Methods](#through-methods)
+* [Promises and Callbacks](#promises-and-callbacks)
 * [HTTP Requests](#http-requests)
 * [Stream Destruction and Cleanup](#stream-destruction-and-cleanup)
 * [Error Handling](#error-handling)
@@ -44,6 +46,25 @@ Table of Contents
 	* [ClassicReadable](#classicreadable)
 	* [ClassicWritable](#classicwritable)
 	* [ClassicDuplex](#classicduplex)
+
+Why
+===
+
+Streams are a great tool in Node.JS, but the native streams framework leaves a lot to be desired.  Even basic tasks
+like error handling on a chain of piped streams become complex and difficult to get right.  ZStreams aims to make
+Node streams easy to work with.
+
+Features include:
+
+- Compatibility with Node.JS streams (zstreams streams inherit from the native streams).
+- Easy error handling; errors in pipe chains are automatically passed downstream.  Unhandled errors
+result in automatic stream destruction.
+- Easy wrapper around native streams (streams1, streams2, and streams3) to convert to a consistent
+zstreams interface.
+- Easy integration into code flow; convert a stream's result into a callback, or promise.
+- Convenience methods for common tasks instead of requiring subclassing a transform stream.
+- A large toolkit of commonly used streams to avoid reimplementing the same thing repeatedly.
+- And more!
 
 Basic Usage
 ===========
@@ -159,6 +180,41 @@ readable.throughDataSync(function(object, cb) {
 ````
 
 The synchronous variants can also throw exceptions, which are converted to stream errors.
+
+Promises and Callbacks
+----------------------
+
+Get the results of a stream chain as a callback or promise.
+
+```js
+myWritableStream.intoCallback(function(error) {
+});
+
+myWritableStream.intoPromise().then(function() {
+}, function(error) {
+});
+
+myReadableObjectStream.intoArray(function(error, array) {
+});
+
+myReadableObjectStream.intoArray().then(function(array) {
+}, function(error) {
+});
+
+myReadableDataStream.intoString(function(error, string) {
+});
+
+myReadableDataStream.intoString().then(function(string) {
+}, function(error) {
+});
+
+myReadableDataStream.intoFile('filename', function(error) {
+});
+
+myReadableDataStream.intoFine('filename').then(function() {
+}, function(error) {
+});
+```
 
 HTTP Requests
 -------------
@@ -559,8 +615,8 @@ readStream.pipe(ps).intoArray(function(error, array) {
 RequestStream
 -------------
 
-This stream exists for the sole purpose of wrapping the commonly used npm module 
-'request' to make it act like a real duplex stream.  The "stream" it returns is 
+This stream exists for the sole purpose of wrapping the commonly used npm module
+'request' to make it act like a real duplex stream.  The "stream" it returns is
 not a real streams2 stream, and does not work with the zstreams conversion methods.
 
 This class will emit errors from the request stream and will also emit the 'response'
