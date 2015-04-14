@@ -10,7 +10,8 @@
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha ./test -R spec",
     "lint": "node ./node_modules/jshint/bin/jshint --reporter unix --exclude ./node_modules . || exit 0",
-    "watch": "node ./node_modules/mocha/bin/mocha --watch ./test -R spec"
+    "watch": "node ./node_modules/mocha/bin/mocha --watch ./test -R spec",
+    "bench": "node ./bench/index.js"
   },
   "dependencies": {
     "crisphooks": "0.0.1",
@@ -24,6 +25,8 @@
     "levelup": "^0.19.0",
     "memdown": "^1.0.0",
     "mocha": "^2.1.0",
-    "request": "^2.53.0"
+    "neo-async": "^0.6.4",
+    "request": "^2.53.0",
+    "spectrophotometer": "^1.0.1"
   }
 }
