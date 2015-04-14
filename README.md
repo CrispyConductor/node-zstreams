@@ -166,6 +166,16 @@ readable.through(function(object, cb) {
 	cb(null, resultObject);
 });
 
+// With a promise
+readable.through(function(object) {
+	return new Promise(...);
+});
+
+// Automatic synchronous return
+readable.through(function(object) {
+	return resultObject;
+});
+
 // Data to Object, Asynchronous
 readable.throughObj(function(chunk, encoding, cb) {
 	//...

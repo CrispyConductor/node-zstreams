@@ -3,15 +3,45 @@ var fs = require('fs');
 var zstreams = require('../lib');
 var abcdFilePath = __dirname + '/resources/abcd.json';
 var outputTestFilePath = __dirname + '/resources/output.json';
+var Promise = require('es6-promise').Promise;
 
 describe('mixin/_readable', function() {
 	describe('through', function() {
 		it('should get all the data and not throw an error', function(done) {
-			zstreams.fromFile(abcdFilePath).through(function(obj, cb) {
+			zstreams.fromFile(abcdFilePath).through(function(obj, enc, cb) {
 				expect(obj.toString()).to.equal('"a"\n"b"\n"c"\n"d"\n');
 				cb(null, obj);
 			}).intoString(function(error) {
 				expect(error).to.not.exist;
+				done();
+			});
+		});
+
+		it('with promise', function(done) {
+			zstreams.fromFile(abcdFilePath).through(function(obj, enc) {
+				expect(obj.toString()).to.equal('"a"\n"b"\n"c"\n"d"\n');
+				return Promise.resolve(obj);
+			}).intoString(function(error) {
+				expect(error).to.not.exist;
+				done();
+			});
+		});
+
+		it('with value', function(done) {
+			zstreams.fromFile(abcdFilePath).through(function(obj, enc) {
+				expect(obj.toString()).to.equal('"a"\n"b"\n"c"\n"d"\n');
+				return obj;
+			}).intoString(function(error) {
+				expect(error).to.not.exist;
+				done();
+			});
+		});
+
+		it('with promise error', function(done) {
+			zstreams.fromFile(abcdFilePath).through(function(obj, cb) {
+				return Promise.reject(new Error());
+			}).intoString(function(error) {
+				expect(error).to.exist;
 				done();
 			});
 		});

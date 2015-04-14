@@ -16,6 +16,7 @@
     "crisphooks": "0.0.1",
     "es6-promise": "^2.0.1",
     "extend": "^2.0.0",
+    "pasync": "^1.1.0",
     "readable-stream": "^1.0.33"
   },
   "devDependencies": {
