@@ -518,7 +518,7 @@ The asynchronous streaming equivalent of `Array.prototype.filter()`.
 
 ````javascript
 zstreams.fromArray([1, 2, 3]).pipe(new zstreams.FilterStream(function(obj, cb) {
-	return obj >= 2;
+	cb(null, obj >= 2);
 })).intoArray(function(error, array) {
 	// array is [2, 3]
 });
