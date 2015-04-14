@@ -16,7 +16,7 @@ var readStreamGenerator = function(limit, isObjectMode) {
 	}, { objectMode: isObjectMode });
 };
 
-benchset('test', function() {
+benchset('Stream Chain', function() {
 	function makeCompare(name, isObjectMode) {
 		compare(name, function() {
 			function makeBench(numItems) {
@@ -31,7 +31,40 @@ benchset('test', function() {
 						}).throughSync(function(num) {
 							return {foo: num};
 						}).pluck('foo')
-						.filterSync(function(num, cb) {
+						.filterSync(function(num) {
+							return num > 1;
+						}).intersperse('#')
+						.pipe(new BlackholeStream({objectMode: true}))
+						.intoCallback(done);
+				});
+			}
+			makeBench(10);
+			makeBench(100);
+			makeBench(1000);
+			makeBench(10000);
+		});
+	}
+
+	makeCompare('data mode', false);
+	makeCompare('objectMode', true);
+});
+
+benchset('Stream Chain with async filter', function() {
+	function makeCompare(name, isObjectMode) {
+		compare(name, function() {
+			function makeBench(numItems) {
+				bench('chain with ' + numItems + ' items', function(done) {
+					var readStream = readStreamGenerator(numItems, isObjectMode);
+					readStream
+						.split(',')
+						.throughSync(function(num) {
+							return parseFloat(num);
+						}).throughSync(function(num) {
+							return num * 2;
+						}).throughSync(function(num) {
+							return {foo: num};
+						}).pluck('foo')
+						.filter(function(num, cb) {
 							cb(null, num > 1);
 						}).intersperse('#')
 						.pipe(new BlackholeStream({objectMode: true}))
