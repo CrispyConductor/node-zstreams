@@ -16,7 +16,7 @@ var readStreamGenerator = function(limit, inObjectMode) {
 		}
 	}, { objectMode: inObjectMode });
 };
-/*
+
 benchset('Basic FunctionStream', function() {
 
 	function makeCompare(name, isObjectMode) {
@@ -68,4 +68,3 @@ benchset('Parallel Basic FunctionStream', function() {
 	makeCompare('data mode, 100 runs', false);
 	makeCompare('object mode, 100 runs', true);
 });
-*/
