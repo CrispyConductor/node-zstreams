@@ -31,6 +31,7 @@ Table of Contents
 	* [EventReadableStream](#eventreadable)
 	* [EventWritableStream](#eventwritable)
 	* [EventTransformStream](#eventtransform)
+	* [FileBufferStream](#filebufferstream)
 	* [FilterStream](#filterstream)
 	* [SkipStream](#skipstream)
 	* [LimitStream](#limitstream)
@@ -520,6 +521,12 @@ EventTransform
 --------------
 
 Transforms input events and outputs more events.
+
+FileBufferStream
+----------------
+
+Acts as a passthrough stream that buffers all incoming data to disk.  This is useful to prevent
+a slow stream consumer from causing a fast data provider (such as an http request) to time out.
 
 FilterStream
 ------------
