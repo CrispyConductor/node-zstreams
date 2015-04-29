@@ -79,7 +79,7 @@ describe('Stream ended into functions', function() {
 					}, function(error) {
 						expect(error).to.exist;
 						done();
-					}).catch(done);
+					});
 			}, 200);
 		});
 	});
