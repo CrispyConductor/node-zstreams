@@ -31,7 +31,7 @@ function TestServer(port) {
 			var counter = 0;
 			zstreams.fromFunction(function() {
 				// console.log(counter);
-				if(counter >= 3000000) {
+				if(counter >= 30000) {
 					return null;
 				} else {
 					return counter++;
