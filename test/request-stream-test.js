@@ -26,6 +26,19 @@ function TestServer(port) {
 			zstreams.fromString('test error').pipe(response);
 		} else if(request.url === '/reset') {
 			request.connection.destroy();
+		} else if(request.url === '/longrunning') {
+			response.writeHead(200);
+			var counter = 0;
+			zstreams.fromFunction(function() {
+				// console.log(counter);
+				if(counter >= 30000) {
+					return null;
+				} else {
+					return counter++;
+				}
+			}).intersperse(',').throughData(function(obj) {
+				return ''+obj;
+			}).pipe(response);
 		} else {
 			response.writeHead(404);
 			zstreams.fromString('not found').pipe(response);
@@ -110,6 +123,39 @@ describe('Request Streams', function() {
 				});
 			});
 		});
+	});
+	
+	it('should be able to abort the request if aborted', function(done) {
+		var server = new TestServer(48573);
+		server.start(function(error) {
+			expect(error).to.not.exist;
+			var nextExpected = 0;
+			var req = request({
+				url: server.getURLBase() + '/longrunning',
+				method: 'GET'
+			});
+			var testStream = zstreams(req);
+
+			expect(req._aborted).to.be.undefined;
+
+			testStream.split(',').each(function(obj, cb) {
+				var num = parseInt(obj, 10);
+				if (num === 299) testStream.abortChain();
+				expect(num).to.equal(nextExpected);
+				nextExpected++;
+				cb();
+			}).intoCallback(function(error) {
+				expect(error).to.not.exist;
+				expect(nextExpected).to.equal(300);
+				expect(req._aborted).to.be.true;
+
+				server.destroy(function(error) {
+					expect(error).to.not.exist;
+					done();
+				});
+			});
+		});
+
 	});
 
 	it('should handle error status codes', function(done) {
