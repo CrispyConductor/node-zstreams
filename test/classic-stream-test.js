@@ -47,16 +47,11 @@ describe('Classic Streams', function() {
 		writable.destroy = function() {
 			destroyed = true;
 		};
-		var ended = false;
-		writable.end = function() {
-			ended = true;
-		};
 
 		zstreams.fromArray(['a', 'b', 'c', 'd']).pipe(writable).intoCallback(function(error) {
 			expect(error).to.not.exist;
 			expect(count).to.equal(4);
 			expect(destroyed).to.equal(false);
-			expect(ended).to.equal(true);
 			done();
 		});
 	});
