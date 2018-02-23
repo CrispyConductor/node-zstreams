@@ -1,6 +1,6 @@
 {
   "name": "zstreams",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "description": "Yet another streams library for node",
   "main": "./lib/index.js",
   "license": "BSD-2-Clause",
