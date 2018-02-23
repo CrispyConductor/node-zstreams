@@ -3,6 +3,7 @@
   "version": "3.2.4",
   "description": "Yet another streams library for node",
   "main": "./lib/index.js",
+  "license": "BSD-2-Clause",
   "repository": {
     "type": "git",
     "url": "git@github.com:crispy1989/node-zstreams.git"
