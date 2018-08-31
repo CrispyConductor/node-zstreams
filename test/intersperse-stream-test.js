@@ -38,10 +38,10 @@ describe('IntersperseStream', function() {
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(7);
 
-			expect(array).to.contain({ a: 'a' });
-			expect(array).to.contain({ b: 'b' });
-			expect(array).to.contain({ c: 'c' });
-			expect(array).to.contain({ d: 'd' });
+			expect(array).to.deep.contain({ a: 'a' });
+			expect(array).to.deep.contain({ b: 'b' });
+			expect(array).to.deep.contain({ c: 'c' });
+			expect(array).to.deep.contain({ d: 'd' });
 			expect(array).to.contain(' ');
 
 			done();
@@ -85,7 +85,7 @@ describe('IntersperseStream', function() {
 			expect(array).to.be.instanceof(Array);
 			expect(array.length).to.equal(1);
 
-			expect(array).to.contain({ a: 'a' });
+			expect(array).to.deep.contain({ a: 'a' });
 
 			done();
 		});
