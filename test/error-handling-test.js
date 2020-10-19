@@ -24,10 +24,10 @@ describe('Error Handling', function() {
 		var errorEmittingStream = new ThroughStream(function(chunk, encoding, callback) {
 			var error = new Error('Test Error');
 			callback(error);
-			if(!errorThrown) {
+			/*if(!errorThrown) {
 				errorThrown = true;
 				verifyErrors();
-			}
+			}*/
 		}).on('chainerror', testErrorHandler);
 		var passThrough3 = new PassThrough().on('chainerror', testErrorHandler);
 		var passThrough4 = new PassThrough().on('chainerror', testErrorHandler);
@@ -39,20 +39,30 @@ describe('Error Handling', function() {
 			.pipe(errorEmittingStream)
 			.pipe(passThrough3)
 			.pipe(passThrough4)
-			.pipe(stringWritableStream);
+			.pipe(stringWritableStream)
+			.intoPromise()
+			.then(function() {
+				throw new Error('Should not resolve successfully')
+			})
+			.catch(verifyErrors);
 
-		function verifyErrors() {
-			expect(errorStreams.length).to.equal(7);
-			expect(errorStreams).to.deep.equal([
-				stringReadableStream,
-				passThrough1,
-				passThrough2,
-				errorEmittingStream,
-				passThrough3,
-				passThrough4,
-				stringWritableStream
-			]);
-			done();
+		function verifyErrors(err) {
+			try {
+				expect(err.message).to.equal('Test Error');
+				expect(errorStreams.length).to.equal(7);
+				expect(errorStreams).to.deep.equal([
+					stringReadableStream,
+					passThrough1,
+					passThrough2,
+					errorEmittingStream,
+					passThrough3,
+					passThrough4,
+					stringWritableStream
+				]);
+				done();
+			} catch (err) {
+				done(err);
+			}
 		}
 
 	});
